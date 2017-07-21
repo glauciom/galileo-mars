@@ -45,4 +45,5 @@ public class Metadata {
         byte[] content = new byte[] { 0x00 };
         return content[0];
     }
+
 }

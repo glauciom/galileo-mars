@@ -28,7 +28,8 @@ import java.util.List;
  *
  */
 public class GMFileFormat {
-	public static final int BYTE_SIZE = 8;
-	GlobalHeader header;
-	List<Crumb> crumbs;
+    public static final int BYTE_SIZE = 8;
+    public static final String gm2 = ".gm2";
+    GlobalHeader header;
+    List<Crumb> crumbs;
 }

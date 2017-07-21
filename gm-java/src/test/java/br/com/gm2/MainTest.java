@@ -27,11 +27,18 @@ import br.com.gm2.core.io.GMPack;
  */
 public class MainTest {
     
-    public String srcFile = "src/test/resources/enwik8.zip";
+    public String srcFile = "src/test/resources/test.txt";
+    public String packedFile = "src/test/resources/test.txt.gm2";
     
     @Test
     public void packTest() {
         GMPack pack = new GMPack();
         pack.crumbIt(srcFile);
     }
+    
+//    @Test
+//    public void unpackTest() {
+//        GMUnpack unpack = new GMUnpack();
+//        unpack.unCrumbIt(packedFile);
+//    }
 }

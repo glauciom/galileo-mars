@@ -41,16 +41,29 @@ public class Crumb {
     public int d;
     public byte[] uniqueness;
 
-    private int crumbSize = 28;
+    public static final int crumbSize = 28;
 
     public Crumb(byte[] b, ValidationType type) {
         createCrumbFromBytes(b, type);
     }
 
+    /**
+     * Constructor for packing process
+     * @param b
+     */
     public Crumb(byte[] b) {
         createCrumbFromBytes(b, ValidationType.SHA1);
     }
 
+    /**
+     * Constructor for unpacking process.
+     * @param b
+     * @param header
+     */
+    public Crumb(byte[] b, GlobalHeader header) {
+        // TODO read format.
+    }
+    
     public Crumb createCrumbFromBytes(byte[] b, ValidationType type) {
         BitSet set = BitSet.valueOf(b);
         int n = GMFileFormat.BYTE_SIZE * b.length;
