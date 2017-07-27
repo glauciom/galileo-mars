@@ -24,22 +24,22 @@ package br.com.gm2.core.content;
  */
 public enum CrumbPacket {
 
-    CP128B(0, 64), CP512B(1, 512), CP1KB(2, 1024), CP1MB(3, 1048576);
+	CP64B(0, 64);
 
-    private int value;
-    private int size;
+	private int value;
+	private int size;
 
-    CrumbPacket(int value, int size) {
-        this.value = value;
-        this.size = size;
-    }
+	CrumbPacket(int value, int size) {
+		this.value = value;
+		this.size = size;
+	}
 
-    public int getValue() {
-        return value;
-    }
+	public int getValue() {
+		return value;
+	}
 
-    public int getSize() {
-        return size;
-    }
+	public int getSize() {
+		return size;
+	}
 
 }

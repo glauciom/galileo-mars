@@ -17,12 +17,7 @@
 package br.com.gm2.core.element;
 
 import java.nio.ByteBuffer;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.BitSet;
-
-import br.com.gm2.core.content.Errors;
-import br.com.gm2.core.content.ValidationType;
 
 /**
  * Crumb Header (for each file portion): - 1 bit, boolean: inverse (volatile,
@@ -37,76 +32,66 @@ import br.com.gm2.core.content.ValidationType;
  */
 public class Crumb {
 
-    public int k;
-    public int d;
-    public byte[] uniqueness;
+	public byte k;
+	public short d;
+	public byte uniqueness;
 
-    public static final int crumbSize = 28;
+	public static final int crumbSize = 4;
+	private CRC crc = new CRC();
 
-    public Crumb(byte[] b, ValidationType type) {
-        createCrumbFromBytes(b, type);
-    }
+	/**
+	 * Constructor for packing process
+	 * 
+	 * @param b
+	 */
+	public Crumb(byte[] b) {
+		createCrumbFromBytes(b);
+	}
 
-    /**
-     * Constructor for packing process
-     * @param b
-     */
-    public Crumb(byte[] b) {
-        createCrumbFromBytes(b, ValidationType.SHA1);
-    }
+	/**
+	 * Constructor for unpacking process.
+	 * 
+	 * @param b
+	 * @param header
+	 */
+	public Crumb(byte[] b, GlobalHeader header) {
+		// TODO read format.
+	}
 
-    /**
-     * Constructor for unpacking process.
-     * @param b
-     * @param header
-     */
-    public Crumb(byte[] b, GlobalHeader header) {
-        // TODO read format.
-    }
-    
-    public Crumb createCrumbFromBytes(byte[] b, ValidationType type) {
-        BitSet set = BitSet.valueOf(b);
-        int n = GMFileFormat.BYTE_SIZE * b.length;
-        this.k = set.cardinality();
-        int dim = 0;
-        if (this.k > n / 2) {
-            set.flip(0, n);
-            dim = n - k;
-        } else {
-            dim = this.k;
-        }
-        int from = 0;
-        this.d = 0;
-        int ind = n - dim;
-        for (int i = 0; i < dim; i++) {
-            int current = set.nextSetBit(from);
-            if (current != ind) {
-                int diff = current - ind;
-                this.d += diff * diff;
-            }
+	public Crumb createCrumbFromBytes(byte[] b) {
+		BitSet set = BitSet.valueOf(b);
+		int n = GMFileFormat.BYTE_SIZE * b.length;
+		this.k = (byte) set.cardinality();
+		int dim = 0;
+		if (this.k > n / 2) {
+			set.flip(0, n);
+			dim = n - k;
+		} else {
+			dim = this.k;
+		}
+		int from = 0;
+		this.d = 0;
+		int ind = n - dim;
+		for (int i = 0; i < dim; i++) {
+			int current = set.nextSetBit(from);
+			if (current != ind) {
+				int diff = current - ind;
+				this.d += diff * diff;
+			}
 
-            from = current + 1;
-            ind++;
-        }
+			from = current + 1;
+			ind++;
+		}
 
-        try {
-            MessageDigest md = MessageDigest.getInstance(type.getName());
-            md.update(b, 0, b.length);
-            this.uniqueness = md.digest();
-        } catch (NoSuchAlgorithmException e) {
-            System.err.println(Errors.ERROR_2.toString());
-            return null;
-        }
+		this.uniqueness = crc.doIt(b);
+		return this;
+	}
 
-        return this;
-    }
-
-    public byte[] getBytes() {
-        ByteBuffer bb = ByteBuffer.allocate(crumbSize);
-        bb.putInt(k);
-        bb.putInt(d);
-        bb.put(uniqueness);
-        return bb.array();
-
-    }
+	public byte[] getBytes() {
+		ByteBuffer bb = ByteBuffer.allocate(crumbSize);
+		bb.put(k);
+		bb.putShort(d);
+		bb.put(uniqueness);
+		return bb.array();
+	}
 }

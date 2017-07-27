@@ -17,7 +17,6 @@
 package br.com.gm2.core.element;
 
 import br.com.gm2.core.content.CrumbPacket;
-import br.com.gm2.core.content.ValidationType;
 
 /**
  * Defines the meta data for a given gm2 file
@@ -26,24 +25,22 @@ import br.com.gm2.core.content.ValidationType;
  *
  */
 public class Metadata {
-    public int numberOfExecutions;
-    public CrumbPacket packetSize;
-    public ValidationType algorithm;
+	public int numberOfExecutions;
+	public CrumbPacket packetSize;
 
-    public Metadata(int numberOfExecutions, CrumbPacket packetSize, ValidationType algorithm) {
-        this.numberOfExecutions = numberOfExecutions;
-        this.packetSize = packetSize;
-        this.algorithm = algorithm;
-    }
+	public Metadata(int numberOfExecutions, CrumbPacket packetSize) {
+		this.numberOfExecutions = numberOfExecutions;
+		this.packetSize = packetSize;
+	}
 
-    public Metadata() {
-        this(0, CrumbPacket.CP1MB, ValidationType.SHA1);
-    }
+	public Metadata() {
+		this(0, CrumbPacket.CP64B);
+	}
 
-    // TODO define meta data format based on inputs.
-    public byte getByte() {
-        byte[] content = new byte[] { 0x00 };
-        return content[0];
-    }
+	// TODO define meta data format based on inputs.
+	public byte getByte() {
+		byte[] content = new byte[] { 0x00 };
+		return content[0];
+	}
 
 }
