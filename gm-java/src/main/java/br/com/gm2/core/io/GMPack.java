@@ -19,8 +19,10 @@ package br.com.gm2.core.io;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.security.NoSuchAlgorithmException;
 
 import br.com.gm2.core.content.Errors;
 import br.com.gm2.core.element.Crumb;
@@ -34,22 +36,24 @@ import br.com.gm2.core.element.GlobalHeader;
  */
 public class GMPack {
 
-    private String gm2 = ".gm2";
+	private String gm2 = ".gm2";
 
-    public void crumbIt(String file) {
-        File src = new File(file);
-        File dest = new File(src.getAbsolutePath() + gm2);
-        GlobalHeader header = new GlobalHeader((int) src.length());
-        try (InputStream is = new FileInputStream(src); OutputStream os = new FileOutputStream(dest)) {
-            byte[] readBuffer = new byte[header.metadata.packetSize.getSize()];
-            os.write(header.getBytes());
-            while ((is.read(readBuffer)) != -1) {
-                byte[] writeBuffer = new Crumb(readBuffer).getBytes();
-                os.write(writeBuffer, 0, writeBuffer.length);
-            }
-        } catch (Exception e) {
-            System.err.println(Errors.ERROR_3.toString());
-        }
-    }
+	public void crumbIt(String file) {
+		File src = new File(file);
+		File dest = new File(src.getAbsolutePath() + gm2);
+		GlobalHeader header = new GlobalHeader((int) src.length());
+		try (InputStream is = new FileInputStream(src); OutputStream os = new FileOutputStream(dest)) {
+			byte[] readBuffer = new byte[header.metadata.packetSize.getSize()];
+			os.write(header.getBytes());
+			while ((is.read(readBuffer)) != -1) {
+				byte[] writeBuffer = new Crumb(readBuffer).getBytes();
+				os.write(writeBuffer, 0, writeBuffer.length);
+			}
+		} catch (NoSuchAlgorithmException e) {
+			System.err.println(Errors.ERROR_2.toString());
+		} catch (IOException e) {
+			System.err.println(Errors.ERROR_3.toString());
+		}
+	}
 
 }

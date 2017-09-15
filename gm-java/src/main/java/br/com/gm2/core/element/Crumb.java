@@ -16,7 +16,10 @@
  */
 package br.com.gm2.core.element;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.BitSet;
 
 /**
@@ -34,17 +37,18 @@ public class Crumb {
 
 	public byte k;
 	public short d;
-	public byte uniqueness;
+	public byte[] uniqueness;
 
-	public static final int crumbSize = 4;
-	private CRC crc = new CRC();
+	public static final int crumbSize = 28;
 
 	/**
 	 * Constructor for packing process
 	 * 
 	 * @param b
+	 * @throws UnsupportedEncodingException 
+	 * @throws NoSuchAlgorithmException 
 	 */
-	public Crumb(byte[] b) {
+	public Crumb(byte[] b) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		createCrumbFromBytes(b);
 	}
 
@@ -58,7 +62,7 @@ public class Crumb {
 		// TODO read format.
 	}
 
-	public Crumb createCrumbFromBytes(byte[] b) {
+	public Crumb createCrumbFromBytes(byte[] b) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		BitSet set = BitSet.valueOf(b);
 		int n = GMFileFormat.BYTE_SIZE * b.length;
 		this.k = (byte) set.cardinality();
@@ -83,8 +87,15 @@ public class Crumb {
 			ind++;
 		}
 
-		this.uniqueness = crc.doIt(b);
+		this.uniqueness = SHA(b);
 		return this;
+	}
+
+	public byte[] SHA(byte[] b) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		MessageDigest md;
+		md = MessageDigest.getInstance("SHA-256");
+		md.update(b);
+		return md.digest();
 	}
 
 	public byte[] getBytes() {

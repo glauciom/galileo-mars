@@ -16,6 +16,10 @@
  */
 package br.com.gm2.element;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -31,73 +35,61 @@ import br.com.gm2.core.element.GMFileFormat;
 public class CrumbTest {
 
 	@Test
-	public void createCrumbFromBytesTestAllBitsActivated() {
-		byte[] input = { -1 };
-		byte[] uniqueness = { -123, -27, 50, 113, -31, 64, 6, -16, 38, 89, 33, -48, 45, 77, 115, 108, -36, 88, 11, 11 };
-		Crumb crumb = new Crumb(input);
-		Assert.assertTrue(0 == crumb.d && crumb.k == input.length * GMFileFormat.BYTE_SIZE
-		/* && Arrays.equals(uniqueness, crumb.uniqueness) */);
-	}
-
-	@Test
-	public void createCrumbFromBytesTestFlipBits() {
-		byte[] input = { -20 };
-		byte[] uniqueness = { 10, -48, 82, -35, -97, 50, 64, 85, 33, -28, 60, 110, -67, -59, 47, 90, 2, 84, -109, -78 };
-		Crumb crumb = new Crumb(input);
-		Assert.assertTrue(
-				59 == crumb.d && crumb.k == 5 /*
-												 * && Arrays.equals(uniqueness,
-												 * crumb.uniqueness)
-												 */);
-	}
-
-	@Test
-	public void createCrumbFromBytesTestNoFlipBits() {
-		byte[] input = { 20 };
-		byte[] uniqueness = { 60, -32, -95, -81, -112, -74, -25, -93, -35, -115, 69, -28, 16, -120, 75, 88, -114, -94,
-				-48, 76 };
-		Crumb crumb = new Crumb(input);
-		Assert.assertTrue(
-				25 == crumb.d && crumb.k == 2 /*
-												 * && Arrays.equals(uniqueness,
-												 * crumb.uniqueness)
-												 */);
-	}
-
-	@Test
-	public void createCrumbFromBytesTestAllBitsActivatedHash() {
+	public void createCrumbFromBytesTestAllBitsActivated()
+			throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		byte[] input = { -1 };
 		byte[] uniqueness = { -88, 16, 10, -26, -86, 25, 64, -48, -74, 99, -69, 49, -51, 70, 97, 66, -21, -67, -67, 81,
 				-121, 19, 27, -110, -39, 56, 24, -104, 120, 50, -21, -119 };
 		Crumb crumb = new Crumb(input);
 		Assert.assertTrue(0 == crumb.d && crumb.k == input.length * GMFileFormat.BYTE_SIZE
-		/* && Arrays.equals(uniqueness, crumb.uniqueness) */);
+				&& Arrays.equals(uniqueness, crumb.uniqueness));
 	}
 
 	@Test
-	public void createCrumbFromBytesTestFlipBitsHash() {
+	public void createCrumbFromBytesTestFlipBits() throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		byte[] input = { -20 };
 		byte[] uniqueness = { 69, -8, 61, 23, -31, 11, 52, -4, -96, 30, -72, -12, 69, 77, -84, 52, -89, 119, -39, 64,
 				74, 70, 78, 115, 44, -12, -85, -14, -64, -38, -108, -60 };
 		Crumb crumb = new Crumb(input);
-		Assert.assertTrue(
-				59 == crumb.d && crumb.k == 5 /*
-												 * && Arrays.equals(uniqueness,
-												 * crumb.uniqueness)
-												 */);
+		Assert.assertTrue(59 == crumb.d && crumb.k == 5 && Arrays.equals(uniqueness, crumb.uniqueness));
 	}
 
 	@Test
-	public void createCrumbFromBytesTestNoFlipBitsHash() {
+	public void createCrumbFromBytesTestNoFlipBits() throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		byte[] input = { 20 };
 		byte[] uniqueness = { -125, -119, 29, 127, -24, 92, 51, -27, 44, -117, 78, 88, 20, -55, 47, -74, -93, -71, 70,
 				114, -103, 32, 5, 56, -90, -70, -70, -88, -76, 82, -40, 121 };
 		Crumb crumb = new Crumb(input);
-		Assert.assertTrue(
-				25 == crumb.d && crumb.k == 2 /*
-												 * && Arrays.equals(uniqueness,
-												 * crumb.uniqueness)
-												 */);
+		Assert.assertTrue(25 == crumb.d && crumb.k == 2 && Arrays.equals(uniqueness, crumb.uniqueness));
+	}
+
+	@Test
+	public void createCrumbFromBytesTestAllBitsActivatedHash()
+			throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		byte[] input = { -1 };
+		byte[] uniqueness = { -88, 16, 10, -26, -86, 25, 64, -48, -74, 99, -69, 49, -51, 70, 97, 66, -21, -67, -67, 81,
+				-121, 19, 27, -110, -39, 56, 24, -104, 120, 50, -21, -119 };
+		Crumb crumb = new Crumb(input);
+		Assert.assertTrue(0 == crumb.d && crumb.k == input.length * GMFileFormat.BYTE_SIZE
+				&& Arrays.equals(uniqueness, crumb.uniqueness));
+	}
+
+	@Test
+	public void createCrumbFromBytesTestFlipBitsHash() throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		byte[] input = { -20 };
+		byte[] uniqueness = { 69, -8, 61, 23, -31, 11, 52, -4, -96, 30, -72, -12, 69, 77, -84, 52, -89, 119, -39, 64,
+				74, 70, 78, 115, 44, -12, -85, -14, -64, -38, -108, -60 };
+		Crumb crumb = new Crumb(input);
+		Assert.assertTrue(59 == crumb.d && crumb.k == 5 && Arrays.equals(uniqueness, crumb.uniqueness));
+	}
+
+	@Test
+	public void createCrumbFromBytesTestNoFlipBitsHash() throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		byte[] input = { 20 };
+		byte[] uniqueness = { -125, -119, 29, 127, -24, 92, 51, -27, 44, -117, 78, 88, 20, -55, 47, -74, -93, -71, 70,
+				114, -103, 32, 5, 56, -90, -70, -70, -88, -76, 82, -40, 121 };
+		Crumb crumb = new Crumb(input);
+		Assert.assertTrue(25 == crumb.d && crumb.k == 2 && Arrays.equals(uniqueness, crumb.uniqueness));
 	}
 
 }
