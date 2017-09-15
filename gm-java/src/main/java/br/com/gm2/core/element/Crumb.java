@@ -35,11 +35,11 @@ import java.util.BitSet;
  */
 public class Crumb {
 
-	public byte k;
-	public short d;
+	public int k;
+	public int d;
 	public byte[] uniqueness;
 
-	public static final int crumbSize = 28;
+	public static final int crumbSize = 40;
 
 	/**
 	 * Constructor for packing process
@@ -100,8 +100,8 @@ public class Crumb {
 
 	public byte[] getBytes() {
 		ByteBuffer bb = ByteBuffer.allocate(crumbSize);
-		bb.put(k);
-		bb.putShort(d);
+		bb.putInt(k);
+		bb.putInt(d);
 		bb.put(uniqueness);
 		return bb.array();
 	}
