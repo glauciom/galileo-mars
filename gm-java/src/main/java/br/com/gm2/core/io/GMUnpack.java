@@ -47,8 +47,8 @@ public class GMUnpack {
 			byte[] readBuffer = new byte[Crumb.crumbSize];
 			UnpackStrategy strategy = new BruteForceStrategy();
 			while ((is.read(readBuffer)) != -1) {
-				Crumb crumb = new Crumb(readBuffer, header);
-				byte[] writeBuffer = strategy.execute(crumb);
+				Crumb crumb = new Crumb(readBuffer, header, header.remainingSize);
+				byte[] writeBuffer = strategy.execute(crumb, header);
 				os.write(writeBuffer, 0, writeBuffer.length);
 			}
 		} catch (Exception e) {

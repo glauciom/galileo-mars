@@ -17,6 +17,7 @@
 package br.com.gm2.core.strategy.impl;
 
 import br.com.gm2.core.element.Crumb;
+import br.com.gm2.core.element.GlobalHeader;
 import br.com.gm2.core.strategy.UnpackStrategy;
 
 /**
@@ -27,10 +28,58 @@ import br.com.gm2.core.strategy.UnpackStrategy;
  */
 public class BruteForceStrategy implements UnpackStrategy {
 
+	private int m, h, k, n, j;
+	private int[] subset;
+	private boolean isLastElement;
+
 	@Override
-	public byte[] execute(Crumb crumb) {
-		// TODO Auto-generated method stub
-		return new byte[] { 49 };
+	public byte[] execute(Crumb crumb, GlobalHeader header) {
+		this.n = crumb.n;
+		this.k = crumb.k;
+		this.isLastElement = false;
+		this.subset = new int[k];
+		this.m = 0;
+		this.h = k;
+		for (j = 0; j < k; j++) {
+			subset[j] = j;
+		}
+
+		while (!isLastElement) {
+			System.out.println(printSubset(subset));
+			subset = nextKSBAlgorithm();
+			if (isLastElement) {
+				System.out.println(printSubset(subset));
+			}
+		}
+
+		return null;
+	}
+
+	public String printSubset(int[] subset) {
+		String s = "[";
+		for (int i = 0; i < subset.length - 1; i++) {
+			s += subset[i] + ", ";
+		}
+		s += subset[subset.length - 1] + "]";
+		return s;
+	}
+
+	private int[] nextKSBAlgorithm() {
+		if (isLastElement) {
+			return null;
+		}
+		if (m < n - h - 1) {
+			h = 0;
+		}
+		h++;
+		m = subset[k - h];
+		for (j = 0; j < h; j++) {
+			subset[k + j - h] = m + j + 1;
+			if (subset[0] == n - k) {
+				isLastElement = true;
+			}
+		}
+		return subset;
 	}
 
 }

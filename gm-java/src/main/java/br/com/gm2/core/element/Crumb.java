@@ -35,6 +35,7 @@ import java.util.BitSet;
  */
 public class Crumb {
 
+	public transient int n;
 	public int k;
 	public int d;
 	public byte[] uniqueness;
@@ -59,7 +60,8 @@ public class Crumb {
 	 * @param b
 	 * @param header
 	 */
-	public Crumb(byte[] b, GlobalHeader header) {
+	public Crumb(byte[] b, GlobalHeader header, int n) {
+		this.n = GMFileFormat.BYTE_SIZE * n;
 		setBytes(b, header);
 	}
 

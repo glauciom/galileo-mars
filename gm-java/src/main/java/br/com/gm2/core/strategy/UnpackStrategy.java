@@ -17,6 +17,7 @@
 package br.com.gm2.core.strategy;
 
 import br.com.gm2.core.element.Crumb;
+import br.com.gm2.core.element.GlobalHeader;
 
 /**
  * Defines a default interface for different unpack strategies.
@@ -26,6 +27,6 @@ import br.com.gm2.core.element.Crumb;
  */
 public interface UnpackStrategy {
 
-	public byte[] execute(Crumb crumb);
+	public byte[] execute(Crumb crumb, GlobalHeader header);
 
 }
