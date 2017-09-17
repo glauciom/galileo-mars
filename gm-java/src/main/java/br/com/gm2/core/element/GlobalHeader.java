@@ -31,29 +31,29 @@ import java.nio.ByteBuffer;
  */
 public class GlobalHeader {
 
-    public Metadata metadata;
-    public int totalSize;
-    public transient int remainingSize;
+	public Metadata metadata;
+	public int totalSize;
+	public transient int remainingSize;
 
-    public static final int globalHeaderSize = 5;
+	public static final int globalHeaderSize = 5;
 
-    public GlobalHeader(int totalSize) {
-        this.metadata = new Metadata();
-        this.totalSize = totalSize;
-    }
+	public GlobalHeader(int totalSize) {
+		this.metadata = new Metadata();
+		this.totalSize = totalSize;
+		this.remainingSize = totalSize % metadata.packetSize.getSize();
+	}
 
-    public byte[] getBytes() {
-        ByteBuffer bb = ByteBuffer.allocate(globalHeaderSize);
-        bb.put(metadata.getByte());
-        bb.putInt(totalSize);
-        return bb.array();
-    }
+	public byte[] getBytes() {
+		ByteBuffer bb = ByteBuffer.allocate(globalHeaderSize);
+		bb.put(metadata.getByte());
+		bb.putInt(totalSize);
+		return bb.array();
+	}
 
-    public static GlobalHeader readBytes(byte[] b) {
-        ByteBuffer bb = ByteBuffer.allocate(globalHeaderSize);
-        bb.put(b);
-        bb.get(); // ignoring first byte read.
-        return new GlobalHeader(bb.getInt());
+	public static GlobalHeader readBytes(byte[] b) {
+		ByteBuffer bb = ByteBuffer.wrap(b);
+		bb.get(); // ignoring first byte read.
+		return new GlobalHeader(bb.getInt());
 
-    }
+	}
 }

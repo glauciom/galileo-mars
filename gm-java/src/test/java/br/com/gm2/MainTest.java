@@ -19,26 +19,25 @@ package br.com.gm2;
 import org.junit.Test;
 
 import br.com.gm2.core.io.GMPack;
+import br.com.gm2.core.io.GMUnpack;
 
 /**
  * Defines main test cases for this program.
+ * 
  * @author glauciom
  *
  */
 public class MainTest {
-    
-    public String srcFile = "src/test/resources/test.txt";
-    public String packedFile = "src/test/resources/test.txt.gm2";
-    
-    @Test
-    public void packTest() {
-        GMPack pack = new GMPack();
-        pack.crumbIt(srcFile);
-    }
-    
-//    @Test
-//    public void unpackTest() {
-//        GMUnpack unpack = new GMUnpack();
-//        unpack.unCrumbIt(packedFile);
-//    }
+
+	public String srcFile = "src/test/resources/test.txt";
+	public String packedFile = "src/test/resources/test.txt.gm2";
+
+	@Test
+	public void packUnpackTest() {
+		GMPack pack = new GMPack();
+		pack.crumbIt(srcFile);
+		GMUnpack unpack = new GMUnpack();
+		unpack.unCrumbIt(packedFile);
+	}
+
 }

@@ -38,6 +38,7 @@ public class Crumb {
 	public int k;
 	public int d;
 	public byte[] uniqueness;
+	public boolean inverse = false;
 
 	public static final int crumbSize = 40;
 
@@ -45,8 +46,8 @@ public class Crumb {
 	 * Constructor for packing process
 	 * 
 	 * @param b
-	 * @throws UnsupportedEncodingException 
-	 * @throws NoSuchAlgorithmException 
+	 * @throws UnsupportedEncodingException
+	 * @throws NoSuchAlgorithmException
 	 */
 	public Crumb(byte[] b) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		createCrumbFromBytes(b);
@@ -59,7 +60,7 @@ public class Crumb {
 	 * @param header
 	 */
 	public Crumb(byte[] b, GlobalHeader header) {
-		// TODO read format.
+		setBytes(b, header);
 	}
 
 	public Crumb createCrumbFromBytes(byte[] b) throws NoSuchAlgorithmException, UnsupportedEncodingException {
@@ -67,9 +68,11 @@ public class Crumb {
 		int n = GMFileFormat.BYTE_SIZE * b.length;
 		this.k = (byte) set.cardinality();
 		int dim = 0;
+		boolean inverse = false;
 		if (this.k > n / 2) {
 			set.flip(0, n);
 			dim = n - k;
+			inverse = true;
 		} else {
 			dim = this.k;
 		}
@@ -88,6 +91,9 @@ public class Crumb {
 		}
 
 		this.uniqueness = SHA(b);
+		if (inverse) {
+			this.k = -this.k;
+		}
 		return this;
 	}
 
@@ -104,5 +110,19 @@ public class Crumb {
 		bb.putInt(d);
 		bb.put(uniqueness);
 		return bb.array();
+	}
+
+	public void setBytes(byte[] crumbByte, GlobalHeader header) {
+		ByteBuffer bb = ByteBuffer.wrap(crumbByte);
+		this.k = bb.getInt();
+		if (this.k < 0) {
+			inverse = true;
+			this.k = -this.k;
+		}
+		this.d = bb.getInt();
+		ByteBuffer shaBuffer = ByteBuffer.allocate(bb.remaining());
+		shaBuffer.put(crumbByte, bb.position(), bb.remaining());
+		this.uniqueness = shaBuffer.array();
+
 	}
 }

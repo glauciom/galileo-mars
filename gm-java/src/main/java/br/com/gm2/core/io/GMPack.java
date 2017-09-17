@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
 
 import br.com.gm2.core.content.Errors;
@@ -45,8 +46,11 @@ public class GMPack {
 		try (InputStream is = new FileInputStream(src); OutputStream os = new FileOutputStream(dest)) {
 			byte[] readBuffer = new byte[header.metadata.packetSize.getSize()];
 			os.write(header.getBytes());
-			while ((is.read(readBuffer)) != -1) {
-				byte[] writeBuffer = new Crumb(readBuffer).getBytes();
+			int size = -1;
+			while ((size = is.read(readBuffer)) != -1) {
+				ByteBuffer bb = ByteBuffer.allocate(size);
+				bb.put(readBuffer, 0, size);
+				byte[] writeBuffer = new Crumb(bb.array()).getBytes();
 				os.write(writeBuffer, 0, writeBuffer.length);
 			}
 		} catch (NoSuchAlgorithmException e) {
