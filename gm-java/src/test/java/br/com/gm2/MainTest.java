@@ -16,6 +16,13 @@
  */
 package br.com.gm2;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+
+import org.junit.Assert;
 import org.junit.Test;
 
 import br.com.gm2.core.io.GMPack;
@@ -29,15 +36,21 @@ import br.com.gm2.core.io.GMUnpack;
  */
 public class MainTest {
 
-	public String srcFile = "src/test/resources/test.txt";
-	public String packedFile = "src/test/resources/test.txt.gm2";
+    public String srcFile = "src/test/resources/test.txt";
+    public String packedFile = "src/test/resources/test.txt.gm2";
 
-	@Test
-	public void packUnpackTest() {
-		GMPack pack = new GMPack();
-		pack.crumbIt(srcFile);
-		GMUnpack unpack = new GMUnpack();
-		unpack.unCrumbIt(packedFile);
-	}
+    @Test
+    public void packUnpackTest() throws IOException {
+        GMPack pack = new GMPack();
+        pack.crumbIt(srcFile);
+        GMUnpack unpack = new GMUnpack();
+        File src = new File(srcFile);
+        File dest = unpack.unCrumbIt(packedFile);
+        byte[] contentSrc = Files.readAllBytes(Paths.get(src.getAbsolutePath()));
+        byte[] contentDest = Files.readAllBytes(Paths.get(dest.getAbsolutePath()));
+        Assert.assertTrue(Arrays.equals(contentSrc, contentDest));
+        dest.delete();
+
+    }
 
 }

@@ -16,6 +16,9 @@
  */
 package br.com.gm2.core.strategy;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+
 import br.com.gm2.core.element.Crumb;
 import br.com.gm2.core.element.GlobalHeader;
 
@@ -27,6 +30,6 @@ import br.com.gm2.core.element.GlobalHeader;
  */
 public interface UnpackStrategy {
 
-	public byte[] execute(Crumb crumb, GlobalHeader header);
+    public byte[] execute(Crumb crumb, GlobalHeader header) throws NoSuchAlgorithmException, UnsupportedEncodingException;
 
 }
