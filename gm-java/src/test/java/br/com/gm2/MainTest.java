@@ -41,7 +41,8 @@ public class MainTest {
 
     @Test
     public void packUnpackTest() throws IOException {
-        GMPack pack = new GMPack();
+        long time = System.currentTimeMillis();
+    	GMPack pack = new GMPack();
         pack.crumbIt(srcFile);
         GMUnpack unpack = new GMUnpack();
         File src = new File(srcFile);
@@ -50,7 +51,7 @@ public class MainTest {
         byte[] contentDest = Files.readAllBytes(Paths.get(dest.getAbsolutePath()));
         Assert.assertTrue(Arrays.equals(contentSrc, contentDest));
         dest.delete();
-
+        System.out.println("Time Elapsed: " + (System.currentTimeMillis() - time) + " milliseconds" );
     }
 
 }

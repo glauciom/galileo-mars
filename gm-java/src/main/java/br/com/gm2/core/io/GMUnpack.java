@@ -37,29 +37,41 @@ import br.com.gm2.core.strategy.impl.BruteForceStrategy;
  */
 public class GMUnpack {
 
-    public File unCrumbIt(String file) {
-        File src = new File(file);
-        File dest = new File(src.getParent() + File.separator + extractFileType(src));
-        try (InputStream is = new FileInputStream(src); OutputStream os = new FileOutputStream(dest)) {
-            byte[] headerbuf = new byte[GlobalHeader.globalHeaderSize];
-            is.read(headerbuf, 0, GlobalHeader.globalHeaderSize);
-            GlobalHeader header = GlobalHeader.readBytes(headerbuf);
-            byte[] readBuffer = new byte[Crumb.crumbSize];
-            UnpackStrategy strategy = new BruteForceStrategy();
-            while ((is.read(readBuffer)) != -1) {
-                Crumb crumb = new Crumb(readBuffer, header, header.remainingSize);
-                byte[] writeBuffer = strategy.execute(crumb, header);
-                os.write(writeBuffer, 0, writeBuffer.length);
-            }
-        } catch (Exception e) {
-            System.err.println(Errors.ERROR_3.toString());
-        }
-        return dest;
-    }
+	public File unCrumbIt(String file) {
+		File src = new File(file);
+		File dest = new File(src.getParent() + File.separator + extractFileType(src));
+		try (InputStream is = new FileInputStream(src); OutputStream os = new FileOutputStream(dest)) {
+			byte[] headerbuf = new byte[GlobalHeader.globalHeaderSize];
+			is.read(headerbuf, 0, GlobalHeader.globalHeaderSize);
+			GlobalHeader header = GlobalHeader.readBytes(headerbuf);
+			byte[] readBuffer = new byte[Crumb.crumbSize];
+			UnpackStrategy strategy = new BruteForceStrategy();
+			int numberOfCrumbs = header.totalSize / header.metadata.packetSize.getSize();
+			int index = 0;
+			while ((is.read(readBuffer)) != -1) {
+				int size = 0;
+				if (index == numberOfCrumbs) {
+					size = header.remainingSize;
+				} else {
+					size = header.metadata.packetSize.getSize();
+				}
+				if (size > 0) {
+					Crumb crumb = new Crumb(readBuffer, header, size);
+					byte[] writeBuffer = strategy.execute(crumb, header);
+					os.write(writeBuffer, 0, writeBuffer.length);
+				}
+				index++;
+			}
 
-    public String extractFileType(File src) {
-        return System.currentTimeMillis() + "-" + src.getName().replaceAll(GMFileFormat.gm2, "");
+		} catch (Exception e) {
+			System.err.println(Errors.ERROR_3.toString());
+		}
+		return dest;
+	}
 
-    }
+	public String extractFileType(File src) {
+		return System.currentTimeMillis() + "-" + src.getName().replaceAll(GMFileFormat.gm2, "");
+
+	}
 
 }
