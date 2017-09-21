@@ -24,7 +24,7 @@ package br.com.gm2.core.content;
  */
 public enum CrumbPacket {
 
-	CP64B(0, 3);
+	CP64B(0, 1);
 
 	private int value;
 	private int size;

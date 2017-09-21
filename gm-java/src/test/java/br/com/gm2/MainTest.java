@@ -36,12 +36,13 @@ import br.com.gm2.core.io.GMUnpack;
  */
 public class MainTest {
 
-    public String srcFile = "src/test/resources/test.txt";
-    public String packedFile = "src/test/resources/test.txt.gm2";
 
     @Test
     public void packUnpackTest() throws IOException {
-        long time = System.currentTimeMillis();
+        String srcFile = "src/test/resources/test.txt";
+        String packedFile = "src/test/resources/test.txt.gm2";
+
+    	long time = System.currentTimeMillis();
     	GMPack pack = new GMPack();
         pack.crumbIt(srcFile);
         GMUnpack unpack = new GMUnpack();
@@ -54,4 +55,22 @@ public class MainTest {
         System.out.println("Time Elapsed: " + (System.currentTimeMillis() - time) + " milliseconds" );
     }
 
+    @Test
+    public void packUnpackTestImage() throws IOException {
+    	String srcFile = "src/test/resources/small.jpg";
+        String packedFile = "src/test/resources/small.jpg.gm2";
+        long time = System.currentTimeMillis();
+    	GMPack pack = new GMPack();
+        pack.crumbIt(srcFile);
+        GMUnpack unpack = new GMUnpack();
+        File src = new File(srcFile);
+        File dest = unpack.unCrumbIt(packedFile);
+        byte[] contentSrc = Files.readAllBytes(Paths.get(src.getAbsolutePath()));
+        byte[] contentDest = Files.readAllBytes(Paths.get(dest.getAbsolutePath()));
+        Assert.assertTrue(Arrays.equals(contentSrc, contentDest));
+        dest.delete();
+        System.out.println("Time Elapsed: " + (System.currentTimeMillis() - time) + " milliseconds" );
+    }
+    
+    
 }

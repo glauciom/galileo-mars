@@ -24,7 +24,8 @@ package br.com.gm2.core.content;
  */
 public enum Errors {
 
-	ERROR_0("Error Opening File"), ERROR_1("Error Writing file"), ERROR_2("Invalid Hash Algorithm"), ERROR_3("Error During file processing");
+	ERROR_0("Error Opening File"), ERROR_1("Error Writing file"), ERROR_2("Invalid Hash Algorithm"), ERROR_3(
+			"Pack: Error During file processing"), ERROR_4("Unpack: Error During file processing");
 
 	private String message;
 
