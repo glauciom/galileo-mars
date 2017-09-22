@@ -31,7 +31,7 @@ import br.com.gm2.core.strategy.UnpackStrategy;
  */
 public class BruteForceStrategy implements UnpackStrategy {
 
-	private int m, h, k, n, j;
+	private int m, h, k, n;
 	private int[] subset;
 	private boolean isLastElement;
 	private int[] identity;
@@ -40,18 +40,13 @@ public class BruteForceStrategy implements UnpackStrategy {
 	public byte[] execute(Crumb crumb, GlobalHeader header)
 			throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		this.n = crumb.n;
-		if (crumb.inverse) {
-			this.k = n - crumb.k;
-		} else {
-			this.k = crumb.k;
-		}
-
+		this.k = crumb.k;
 		this.isLastElement = false;
 		this.subset = new int[k];
 		this.identity = new int[k];
 		this.m = 0;
 		this.h = k;
-		for (j = 0; j < k; j++) {
+		for (int j = 0; j < k; j++) {
 			subset[j] = j;
 			identity[j] = (n - k) + j;
 		}
@@ -71,15 +66,6 @@ public class BruteForceStrategy implements UnpackStrategy {
 		return null;
 	}
 
-	public String printSubset(int[] subset) {
-		String s = "[";
-		for (int i = 0; i < subset.length - 1; i++) {
-			s += subset[i] + ", ";
-		}
-		s += subset[subset.length - 1] + "]";
-		return s;
-	}
-
 	private int[] nextKSBAlgorithm() {
 		if (isLastElement) {
 			return null;
@@ -89,7 +75,7 @@ public class BruteForceStrategy implements UnpackStrategy {
 		}
 		h++;
 		m = subset[k - h];
-		for (j = 0; j < h; j++) {
+		for (int j = 0; j < h; j++) {
 			subset[k + j - h] = m + j + 1;
 			if (subset[0] == n - k) {
 				isLastElement = true;

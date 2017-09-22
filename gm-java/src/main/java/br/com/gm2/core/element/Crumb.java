@@ -120,7 +120,7 @@ public class Crumb {
 		this.k = bb.getInt();
 		if (this.k < 0) {
 			inverse = true;
-			this.k = -this.k;
+			this.k = n + this.k;
 		}
 		this.d = bb.getInt();
 		ByteBuffer shaBuffer = ByteBuffer.allocate(bb.remaining());
