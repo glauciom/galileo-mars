@@ -20,6 +20,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.BitSet;
 
 /**
@@ -137,6 +138,34 @@ public class Crumb {
 		byte[] result = new byte[capacity];
 		for (int i = 0; i < bytes.length; i++) {
 			result[i] = bytes[bytes.length - 1 - i];
+		}
+		return result;
+	}
+
+	public byte[] processSubset(int[] subset, int[] identity)
+			throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		if (dc(subset, identity) == d) {
+			BitSet set = new BitSet(subset.length);
+			for (int i = 0; i < subset.length; i++) {
+				set.set(subset[i]);
+			}
+			byte[] content = toGMByteArray(set, n / GMFileFormat.BYTE_SIZE);
+			if (Arrays.equals(uniqueness, SHA(content))) {
+				if (inverse) {
+					set.flip(0, n);
+					content = toGMByteArray(set, n / GMFileFormat.BYTE_SIZE);
+				}
+				return content;
+			}
+		}
+		return null;
+	}
+
+	private int dc(int[] subset, int[] identity) {
+		int result = 0;
+		for (int i = 0; i < identity.length; i++) {
+			int diff = identity[i] - subset[i];
+			result += diff * diff;
 		}
 		return result;
 	}

@@ -18,11 +18,8 @@ package br.com.gm2.core.strategy.impl;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.BitSet;
 
 import br.com.gm2.core.element.Crumb;
-import br.com.gm2.core.element.GMFileFormat;
 import br.com.gm2.core.element.GlobalHeader;
 import br.com.gm2.core.strategy.UnpackStrategy;
 
@@ -34,7 +31,7 @@ import br.com.gm2.core.strategy.UnpackStrategy;
  */
 public class BruteForceStrategy implements UnpackStrategy {
 
-	private int m, h, k, n, j, d;
+	private int m, h, k, n, j;
 	private int[] subset;
 	private boolean isLastElement;
 	private int[] identity;
@@ -49,7 +46,6 @@ public class BruteForceStrategy implements UnpackStrategy {
 			this.k = crumb.k;
 		}
 
-		this.d = crumb.d;
 		this.isLastElement = false;
 		this.subset = new int[k];
 		this.identity = new int[k];
@@ -60,46 +56,19 @@ public class BruteForceStrategy implements UnpackStrategy {
 			identity[j] = (n - k) + j;
 		}
 
-		byte[] result = processSubset(crumb);
+		byte[] result = crumb.processSubset(subset, identity);
 		if (result != null) {
 			return result;
 		}
 		while (!isLastElement) {
 			subset = nextKSBAlgorithm();
-			result = processSubset(crumb);
+			result = crumb.processSubset(subset, identity);
 			if (result != null) {
 				return result;
 			}
 		}
 
 		return null;
-	}
-
-	private byte[] processSubset(Crumb crumb) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		if (dc(subset, identity) == d) {
-			BitSet set = new BitSet(subset.length);
-			for (int i = 0; i < subset.length; i++) {
-				set.set(subset[i]);
-			}
-			byte[] content = crumb.toGMByteArray(set, crumb.n / GMFileFormat.BYTE_SIZE);
-			if (Arrays.equals(crumb.uniqueness, crumb.SHA(content))) {
-				if (crumb.inverse) {
-					set.flip(0, n);
-					content = crumb.toGMByteArray(set, crumb.n / GMFileFormat.BYTE_SIZE);
-				}
-				return content;
-			}
-		}
-		return null;
-	}
-
-	public int dc(int[] subset, int[] identity) {
-		int result = 0;
-		for (int i = 0; i < identity.length; i++) {
-			int diff = identity[i] - subset[i];
-			result += diff * diff;
-		}
-		return result;
 	}
 
 	public String printSubset(int[] subset) {
