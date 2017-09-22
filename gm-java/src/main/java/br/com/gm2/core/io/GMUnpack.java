@@ -58,9 +58,6 @@ public class GMUnpack {
 				if (size > 0) {
 					Crumb crumb = new Crumb(readBuffer, header, size);
 					byte[] writeBuffer = strategy.execute(crumb, header);
-					if (writeBuffer.length == 0) {
-						writeBuffer = new byte[size];
-					}
 					os.write(writeBuffer, 0, writeBuffer.length);
 				}
 				index++;

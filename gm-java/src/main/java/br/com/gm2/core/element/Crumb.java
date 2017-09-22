@@ -68,7 +68,7 @@ public class Crumb {
 	public Crumb createCrumbFromBytes(byte[] b) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		BitSet set = BitSet.valueOf(b);
 		int n = GMFileFormat.BYTE_SIZE * b.length;
-		this.k = (byte) set.cardinality();
+		this.k = set.cardinality();
 		int dim = 0;
 		boolean inverse = false;
 		if (this.k > n / 2) {
@@ -95,7 +95,7 @@ public class Crumb {
 		if (inverse) {
 			this.k = -this.k;
 		}
-		this.uniqueness = SHA(set.toByteArray());
+		this.uniqueness = SHA(toGMByteArray(set, b.length));
 		return this;
 	}
 
@@ -125,6 +125,19 @@ public class Crumb {
 		ByteBuffer shaBuffer = ByteBuffer.allocate(bb.remaining());
 		shaBuffer.put(crumbByte, bb.position(), bb.remaining());
 		this.uniqueness = shaBuffer.array();
+	}
 
+	public byte[] toGMByteArray(BitSet bits, int capacity) {
+		byte[] bytes = new byte[capacity];
+		for (int i = 0; i < bits.length(); i++) {
+			if (bits.get(i)) {
+				bytes[bytes.length - i / GMFileFormat.BYTE_SIZE - 1] |= 1 << (i % GMFileFormat.BYTE_SIZE);
+			}
+		}
+		byte[] result = new byte[capacity];
+		for (int i = 0; i < bytes.length; i++) {
+			result[i] = bytes[bytes.length - 1 - i];
+		}
+		return result;
 	}
 }

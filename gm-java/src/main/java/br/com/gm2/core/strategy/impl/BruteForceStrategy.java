@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.BitSet;
 
 import br.com.gm2.core.element.Crumb;
+import br.com.gm2.core.element.GMFileFormat;
 import br.com.gm2.core.element.GlobalHeader;
 import br.com.gm2.core.strategy.UnpackStrategy;
 
@@ -80,11 +81,11 @@ public class BruteForceStrategy implements UnpackStrategy {
 			for (int i = 0; i < subset.length; i++) {
 				set.set(subset[i]);
 			}
-			byte[] content = set.toByteArray();
+			byte[] content = crumb.toGMByteArray(set, crumb.n / GMFileFormat.BYTE_SIZE);
 			if (Arrays.equals(crumb.uniqueness, crumb.SHA(content))) {
 				if (crumb.inverse) {
 					set.flip(0, n);
-					content = set.toByteArray();
+					content = crumb.toGMByteArray(set, crumb.n / GMFileFormat.BYTE_SIZE);
 				}
 				return content;
 			}
