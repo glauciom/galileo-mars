@@ -20,8 +20,6 @@ import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
 import br.com.gm2.core.element.Crumb;
-import br.com.gm2.core.element.GlobalHeader;
-import br.com.gm2.core.strategy.UnpackStrategy;
 
 /**
  * Implementation of brute force strategy.
@@ -29,16 +27,13 @@ import br.com.gm2.core.strategy.UnpackStrategy;
  * @author glauciom
  *
  */
-public class BruteForceStrategy implements UnpackStrategy {
+public class BruteForceStrategy extends AbstractStrategy {
 
 	private int m, h, k, n;
-	private int[] subset;
 	private boolean isLastElement;
-	private int[] identity;
 
 	@Override
-	public byte[] execute(Crumb crumb, GlobalHeader header)
-			throws NoSuchAlgorithmException, UnsupportedEncodingException {
+	public void init(Crumb crumb) {
 		this.n = crumb.n;
 		this.k = crumb.k;
 		this.isLastElement = false;
@@ -50,7 +45,11 @@ public class BruteForceStrategy implements UnpackStrategy {
 			subset[j] = j;
 			identity[j] = (n - k) + j;
 		}
+	}
 
+	@Override
+	public byte[] algorithm(Crumb crumb)
+			throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		byte[] result = crumb.processSubset(subset, identity);
 		if (result != null) {
 			return result;
@@ -62,7 +61,6 @@ public class BruteForceStrategy implements UnpackStrategy {
 				return result;
 			}
 		}
-
 		return null;
 	}
 

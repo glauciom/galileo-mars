@@ -20,7 +20,6 @@ import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
 import br.com.gm2.core.element.Crumb;
-import br.com.gm2.core.element.GlobalHeader;
 
 /**
  * Defines a default interface for different unpack strategies.
@@ -30,6 +29,6 @@ import br.com.gm2.core.element.GlobalHeader;
  */
 public interface UnpackStrategy {
 
-    public byte[] execute(Crumb crumb, GlobalHeader header) throws NoSuchAlgorithmException, UnsupportedEncodingException;
+    public byte[] algorithm(Crumb crumb) throws NoSuchAlgorithmException, UnsupportedEncodingException;
 
 }
