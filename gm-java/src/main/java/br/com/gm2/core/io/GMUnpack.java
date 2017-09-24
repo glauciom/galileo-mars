@@ -26,8 +26,7 @@ import br.com.gm2.core.content.Errors;
 import br.com.gm2.core.element.Crumb;
 import br.com.gm2.core.element.GMFileFormat;
 import br.com.gm2.core.element.GlobalHeader;
-import br.com.gm2.core.strategy.impl.AbstractStrategy;
-import br.com.gm2.core.strategy.impl.BruteForceStrategy;
+import br.com.gm2.core.strategy.AbstractStrategy;
 
 /**
  * Defines Unpack routine (reading gm2 file)
@@ -37,7 +36,7 @@ import br.com.gm2.core.strategy.impl.BruteForceStrategy;
  */
 public class GMUnpack {
 
-	public File unCrumbIt(String file) {
+	public File unCrumbIt(AbstractStrategy strategy, String file) {
 		File src = new File(file);
 		File dest = new File(src.getParent() + File.separator + extractFileType(src));
 		try (InputStream is = new FileInputStream(src); OutputStream os = new FileOutputStream(dest)) {
@@ -45,7 +44,6 @@ public class GMUnpack {
 			is.read(headerbuf, 0, GlobalHeader.globalHeaderSize);
 			GlobalHeader header = GlobalHeader.readBytes(headerbuf);
 			byte[] readBuffer = new byte[Crumb.crumbSize];
-			AbstractStrategy strategy = new BruteForceStrategy();
 			int numberOfCrumbs = header.totalSize / header.metadata.packetSize.getSize();
 			int index = 0;
 			while ((is.read(readBuffer)) != -1) {

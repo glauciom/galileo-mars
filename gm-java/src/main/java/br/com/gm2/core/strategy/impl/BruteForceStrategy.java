@@ -20,6 +20,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
 import br.com.gm2.core.element.Crumb;
+import br.com.gm2.core.strategy.AbstractStrategy;
 
 /**
  * Implementation of brute force strategy.

@@ -27,6 +27,8 @@ import org.junit.Test;
 
 import br.com.gm2.core.io.GMPack;
 import br.com.gm2.core.io.GMUnpack;
+import br.com.gm2.core.strategy.AbstractStrategy;
+import br.com.gm2.core.strategy.impl.BruteForceStrategy;
 
 /**
  * Defines main test cases for this program.
@@ -37,26 +39,26 @@ import br.com.gm2.core.io.GMUnpack;
 public class MainTest {
 
 	@Test
-	public void packUnpackTest() throws IOException {
+	public void packUnpackBruteForceStrategyTest() throws IOException {
 		String srcFile = "src/test/resources/test.txt";
 		String packedFile = "src/test/resources/test.txt.gm2";
-		processFiles(srcFile, packedFile);
+		processFiles(new BruteForceStrategy(), srcFile, packedFile);
 	}
 
 	@Test
-	public void packUnpackTestImage() throws IOException {
+	public void packUnpackImageBruteForceStrategyTest() throws IOException {
 		String srcFile = "src/test/resources/small.jpg";
 		String packedFile = "src/test/resources/small.jpg.gm2";
-		processFiles(srcFile, packedFile);
+		processFiles(new BruteForceStrategy(), srcFile, packedFile);
 	}
 
-	private void processFiles(String srcFile, String packedFile) throws IOException {
+	private void processFiles(AbstractStrategy strategy, String srcFile, String packedFile) throws IOException {
 		long time = System.currentTimeMillis();
 		GMPack pack = new GMPack();
 		pack.crumbIt(srcFile);
 		GMUnpack unpack = new GMUnpack();
 		File src = new File(srcFile);
-		File dest = unpack.unCrumbIt(packedFile);
+		File dest = unpack.unCrumbIt(strategy, packedFile);
 		byte[] contentSrc = Files.readAllBytes(Paths.get(src.getAbsolutePath()));
 		byte[] contentDest = Files.readAllBytes(Paths.get(dest.getAbsolutePath()));
 		Assert.assertTrue(Arrays.equals(contentSrc, contentDest));

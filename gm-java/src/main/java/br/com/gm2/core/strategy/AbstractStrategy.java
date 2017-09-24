@@ -14,14 +14,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package br.com.gm2.core.strategy.impl;
+package br.com.gm2.core.strategy;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
 import br.com.gm2.core.element.Crumb;
-import br.com.gm2.core.strategy.DefaultStrategy;
-import br.com.gm2.core.strategy.UnpackStrategy;
 
 /**
  * Adding common capabilities to all Strategies.
