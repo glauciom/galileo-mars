@@ -44,8 +44,8 @@ public class Crumb {
     public byte[] uniqueness;
     public boolean inverse = false;
 
-    public static int truncateBytes = 20 - CrumbPacket.CP64B.getSize();
-    public static final int crumbSize = 25 - truncateBytes;
+    public static int truncateBytes = 32 - CrumbPacket.CP64B.getSize();
+    public static final int crumbSize = 37 - truncateBytes;
 
     /**
      * Constructor for packing process
@@ -105,7 +105,7 @@ public class Crumb {
 
     public byte[] SHA(byte[] b) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md;
-        md = MessageDigest.getInstance("SHA-1");
+        md = MessageDigest.getInstance("SHA-256");
         md.update(b);
         byte res[] = md.digest();
         byte[] out = new byte[res.length - truncateBytes];
