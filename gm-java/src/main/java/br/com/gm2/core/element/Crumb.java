@@ -23,6 +23,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.BitSet;
 
+import br.com.gm2.core.content.CrumbPacket;
+
 /**
  * Crumb Header (for each file portion): - 1 bit, boolean: inverse (volatile,
  * during process, if k > default packet size / 2). Default: false; 4 bytes,
@@ -37,13 +39,13 @@ import java.util.BitSet;
 public class Crumb {
 
     public transient int n;
-    public int k;
+    public byte k;
     public int d;
     public byte[] uniqueness;
     public boolean inverse = false;
 
-    public static int truncateBytes = 17;
-    public static final int crumbSize = 28 - truncateBytes;
+    public static int truncateBytes = 20 - CrumbPacket.CP64B.getSize();
+    public static final int crumbSize = 25 - truncateBytes;
 
     /**
      * Constructor for packing process
@@ -70,7 +72,7 @@ public class Crumb {
     public Crumb createCrumbFromBytes(byte[] b) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         BitSet set = BitSet.valueOf(b);
         int n = GMFileFormat.BYTE_SIZE * b.length;
-        this.k = set.cardinality();
+        this.k = (byte) set.cardinality();
         int dim = 0;
         boolean inverse = false;
         if (this.k > n / 2) {
@@ -95,7 +97,7 @@ public class Crumb {
         }
 
         if (inverse) {
-            this.k = -this.k;
+            this.k = (byte) - this.k;
         }
         this.uniqueness = SHA(toGMByteArray(set, b.length));
         return this;
@@ -115,7 +117,7 @@ public class Crumb {
 
     public byte[] getBytes() {
         ByteBuffer bb = ByteBuffer.allocate(crumbSize);
-        bb.putInt(k);
+        bb.put(k);
         bb.putInt(d);
         bb.put(uniqueness);
         return bb.array();
@@ -123,10 +125,10 @@ public class Crumb {
 
     public void setBytes(byte[] crumbByte, GlobalHeader header) {
         ByteBuffer bb = ByteBuffer.wrap(crumbByte);
-        this.k = bb.getInt();
+        this.k = bb.get();
         if (this.k < 0) {
             inverse = true;
-            this.k = n + this.k;
+            this.k = (byte) (n + this.k);
         }
         this.d = bb.getInt();
         ByteBuffer shaBuffer = ByteBuffer.allocate(bb.remaining());
