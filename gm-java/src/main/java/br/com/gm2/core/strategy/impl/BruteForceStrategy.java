@@ -49,8 +49,7 @@ public class BruteForceStrategy extends AbstractStrategy {
 	}
 
 	@Override
-	public byte[] algorithm(Crumb crumb)
-			throws NoSuchAlgorithmException, UnsupportedEncodingException {
+	public byte[] algorithm(Crumb crumb) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		byte[] result = crumb.processSubset(subset, identity);
 		if (result != null) {
 			return result;
@@ -80,7 +79,19 @@ public class BruteForceStrategy extends AbstractStrategy {
 				isLastElement = true;
 			}
 		}
+		System.out.println(this);
 		return subset;
 	}
+
+	@Override
+	public String toString() {
+		String result = "";
+		for (int i = 0; i < subset.length; i++) {
+			result += subset[i] + " ";
+		}
+		result += "\t" + m + "\t" + h;
+		return result;
+	}
+	
 
 }
