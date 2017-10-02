@@ -43,9 +43,10 @@ public class Crumb {
     public int d;
     public byte[] uniqueness;
     public boolean inverse = false;
-
-    public static int truncateBytes = 32 - CrumbPacket.CP64B.getSize();
-    public static final int crumbSize = 37 - truncateBytes;
+    public static int SHA_SIZE = 32;
+    public static int HEADER_SIZE = 5;
+    public static int truncateBytes = SHA_SIZE - CrumbPacket.CP64B.getSize();
+    public static final int crumbSize = SHA_SIZE + HEADER_SIZE - truncateBytes;
 
     /**
      * Constructor for packing process
