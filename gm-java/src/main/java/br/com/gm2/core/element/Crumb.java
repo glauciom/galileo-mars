@@ -42,7 +42,7 @@ public class Crumb {
 	public byte[] uniqueness;
 	public boolean inverse = false;
 
-	public static final int crumbSize = 40;
+	public static final int crumbSize = 28;
 
 	/**
 	 * Constructor for packing process
@@ -102,7 +102,7 @@ public class Crumb {
 
 	public byte[] SHA(byte[] b) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		MessageDigest md;
-		md = MessageDigest.getInstance("SHA-256");
+		md = MessageDigest.getInstance("SHA-1");
 		md.update(b);
 		return md.digest();
 	}
