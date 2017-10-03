@@ -25,6 +25,7 @@ import br.com.gm2.core.strategy.AbstractStrategy;
 
 /**
  * Jumps to a closer area of the solution before to apply brute force algorithm.
+ * 
  * @author glauciom
  *
  */
@@ -32,7 +33,6 @@ public class HybridRankNextStrategy extends AbstractStrategy {
 
 	private int n, k, x, y, index;
 	private BigInteger serial, aproximation;
-	private int[] subset;
 	private BruteForceStrategy bruteForceStrategy;
 
 	@Override
@@ -41,17 +41,45 @@ public class HybridRankNextStrategy extends AbstractStrategy {
 		// TODO define jump criteria.
 		String number = "";
 
+		int[] currentSubset = rankSubset(number);
+		int[] previous = rankSubset(new BigInteger(number).subtract(BigInteger.ONE).toString());
+
+		int[] indices = getIndices(currentSubset, previous);
+
+		bruteForceStrategy = new BruteForceStrategy(subset, indices[0], indices[1]);
+
+		return bruteForceStrategy.algorithm(crumb);
+	}
+
+	private int[] getIndices(int[] currentSubset, int[] previous) {
+		int m = 0;
+		int h = k;
+		if (previous != null) {
+			for (int i = 0; i < currentSubset.length; i++) {
+				if (currentSubset[i] != previous[i]) {
+					m = previous[i];
+					h = currentSubset.length - i;
+					return new int[] { m, h };
+				}
+			}
+		}
+		return new int[] { m, h };
+	}
+
+	private int[] rankSubset(String number) {
 		x = n;
 		y = k - 1;
 		serial = new BigInteger(number);
+		if (serial.equals(BigInteger.ZERO)) {
+			return null;
+		}
+
 		aproximation = BigInteger.ZERO;
 		index = 0;
 		for (int i = 0; i < k; i++) {
 			subset[i] = element(serial);
 		}
-		bruteForceStrategy = new BruteForceStrategy();
-
-		return bruteForceStrategy.algorithm(crumb);
+		return subset;
 	}
 
 	public BigInteger getBinomialElements(int r, int s) {
@@ -91,5 +119,15 @@ public class HybridRankNextStrategy extends AbstractStrategy {
 		}
 		return aux.toString();
 	}
+	
+	BigInteger pow(BigInteger base, BigInteger exponent) {
+		  BigInteger result = BigInteger.ONE;
+		  while (exponent.signum() > 0) {
+		    if (exponent.testBit(0)) result = result.multiply(base);
+		    base = base.multiply(base);
+		    exponent = exponent.shiftRight(1);
+		  }
+		  return result;
+		}
 
 }

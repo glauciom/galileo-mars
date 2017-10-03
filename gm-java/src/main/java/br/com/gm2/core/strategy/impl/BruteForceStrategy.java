@@ -33,6 +33,15 @@ public class BruteForceStrategy extends AbstractStrategy {
 	private int m, h, k, n;
 	private boolean isLastElement;
 
+	public BruteForceStrategy(int[] subset, int m, int h) {
+		this.subset = subset;
+		this.m = m;
+		this.h = h;
+	}
+
+	public BruteForceStrategy() {
+	}
+
 	@Override
 	public void init(Crumb crumb) {
 		this.n = crumb.n;
@@ -65,6 +74,7 @@ public class BruteForceStrategy extends AbstractStrategy {
 	}
 
 	private int[] nextKSBAlgorithm() {
+		System.out.println(this);
 		if (isLastElement) {
 			return null;
 		}
@@ -79,7 +89,6 @@ public class BruteForceStrategy extends AbstractStrategy {
 				isLastElement = true;
 			}
 		}
-		System.out.println(this);
 		return subset;
 	}
 
@@ -92,6 +101,5 @@ public class BruteForceStrategy extends AbstractStrategy {
 		result += "\t" + m + "\t" + h;
 		return result;
 	}
-	
 
 }
