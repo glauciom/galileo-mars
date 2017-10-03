@@ -22,6 +22,7 @@ import java.security.NoSuchAlgorithmException;
 
 import br.com.gm2.core.element.Crumb;
 import br.com.gm2.core.strategy.AbstractStrategy;
+import br.com.gm2.core.strategy.core.BigOperator;
 
 /**
  * Jumps to a closer area of the solution before to apply brute force algorithm.
@@ -82,17 +83,10 @@ public class HybridRankNextStrategy extends AbstractStrategy {
 		return subset;
 	}
 
-	public BigInteger getBinomialElements(int r, int s) {
-		if ((r - s) < s) {
-			return new BigInteger(factorial(r, s)).divide(new BigInteger(factorial(r - s, 1)));
-		}
-		return new BigInteger(factorial(r, r - s)).divide(new BigInteger(factorial(s, 1)));
-	}
-
 	private int element(BigInteger serial) {
 		BigInteger aux = null;
 		for (int j = 1; j <= x - y + 1; j++) {
-			aux = aproximation.add(getBinomialElements(x - j, y));
+			aux = aproximation.add(BigOperator.getBinomialElements(x - j, y));
 			if (aux.compareTo(serial) < 0)
 				aproximation = aux;
 			else {
@@ -111,23 +105,5 @@ public class HybridRankNextStrategy extends AbstractStrategy {
 		this.k = crumb.k;
 		this.subset = new int[k];
 	}
-
-	private String factorial(int r, int op) {
-		BigInteger aux = BigInteger.ONE;
-		for (int t = r; t > op; t--) {
-			aux = aux.multiply(BigInteger.valueOf(t));
-		}
-		return aux.toString();
-	}
-	
-	BigInteger pow(BigInteger base, BigInteger exponent) {
-		  BigInteger result = BigInteger.ONE;
-		  while (exponent.signum() > 0) {
-		    if (exponent.testBit(0)) result = result.multiply(base);
-		    base = base.multiply(base);
-		    exponent = exponent.shiftRight(1);
-		  }
-		  return result;
-		}
 
 }
