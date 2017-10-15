@@ -23,23 +23,23 @@ import br.com.gm2.core.element.Crumb;
 import br.com.gm2.core.strategy.AbstractStrategy;
 
 /**
- * Implementation of brute force strategy.
+ * Implementation of optimal search strategy
  * 
  * @author glauciom
  *
  */
-public class BruteForceStrategy extends AbstractStrategy {
+public class CBinarySearchStrategy extends AbstractStrategy {
 
 	private int m, h, k, n;
 	private boolean isLastElement;
 
-	public BruteForceStrategy(int[] subset, int m, int h) {
+	public CBinarySearchStrategy(int[] subset, int m, int h) {
 		this.subset = subset;
 		this.m = m;
 		this.h = h;
 	}
 
-	public BruteForceStrategy() {
+	public CBinarySearchStrategy() {
 	}
 
 	@Override
@@ -74,6 +74,8 @@ public class BruteForceStrategy extends AbstractStrategy {
 	}
 
 	private int[] nextKSBAlgorithm() {
+		// TODO implement algorithm.
+	//	System.out.println(this);
 		if (isLastElement) {
 			return null;
 		}

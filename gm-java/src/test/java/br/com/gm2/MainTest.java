@@ -25,6 +25,7 @@ import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
 
+import br.com.gm2.core.element.Crumb;
 import br.com.gm2.core.io.GMPack;
 import br.com.gm2.core.io.GMUnpack;
 import br.com.gm2.core.strategy.AbstractStrategy;
@@ -47,8 +48,8 @@ public class MainTest {
 
 	@Test
 	public void packUnpackImageBruteForceStrategyTest() throws IOException {
-		String srcFile = "src/test/resources/small.jpg";
-		String packedFile = "src/test/resources/small.jpg.gm2";
+		String srcFile = "src/test/resources/lena.jpg";
+		String packedFile = "src/test/resources/lena.jpg.gm2";
 		processFiles(new BruteForceStrategy(), srcFile, packedFile);
 	}
 
@@ -64,6 +65,7 @@ public class MainTest {
 		Assert.assertTrue(Arrays.equals(contentSrc, contentDest));
 		dest.delete();
 		System.out.println("Time Elapsed: " + (System.currentTimeMillis() - time) + " milliseconds");
+		System.out.println("Number of Calls: " + Crumb.metrics.toString());
 	}
 
 }

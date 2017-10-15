@@ -22,6 +22,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.BitSet;
+import java.util.concurrent.atomic.AtomicLong;
 
 import br.com.gm2.core.content.CrumbPacket;
 
@@ -47,6 +48,8 @@ public class Crumb {
     public static int HEADER_SIZE = 5;
     public static int truncateBytes = SHA_SIZE - CrumbPacket.CP64B.getSize();
     public static final int crumbSize = SHA_SIZE + HEADER_SIZE - truncateBytes;
+    
+    public static AtomicLong metrics = new AtomicLong();
 
     /**
      * Constructor for packing process
@@ -170,6 +173,7 @@ public class Crumb {
     }
 
     private int dc(int[] subset, int[] identity) {
+    	metrics.addAndGet(1);
         int result = 0;
         for (int i = 0; i < identity.length; i++) {
             int diff = identity[i] - subset[i];
