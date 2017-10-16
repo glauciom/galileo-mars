@@ -30,6 +30,7 @@ import br.com.gm2.core.io.GMPack;
 import br.com.gm2.core.io.GMUnpack;
 import br.com.gm2.core.strategy.AbstractStrategy;
 import br.com.gm2.core.strategy.impl.BruteForceStrategy;
+import br.com.gm2.core.strategy.impl.CBinarySearchStrategy;
 
 /**
  * Defines main test cases for this program.
@@ -43,7 +44,7 @@ public class MainTest {
 	public void packUnpackBruteForceStrategyTest() throws IOException {
 		String srcFile = "src/test/resources/test.txt";
 		String packedFile = "src/test/resources/test.txt.gm2";
-		processFiles(new BruteForceStrategy(), srcFile, packedFile);
+		processFiles(new CBinarySearchStrategy(), srcFile, packedFile);
 	}
 
 	@Test

@@ -30,13 +30,10 @@ import br.com.gm2.core.strategy.AbstractStrategy;
  */
 public class CBinarySearchStrategy extends AbstractStrategy {
 
-	private int m, h, k, n;
-	private boolean isLastElement;
+	private int k, n;
 
-	public CBinarySearchStrategy(int[] subset, int m, int h) {
+	public CBinarySearchStrategy(int[] subset) {
 		this.subset = subset;
-		this.m = m;
-		this.h = h;
 	}
 
 	public CBinarySearchStrategy() {
@@ -46,60 +43,77 @@ public class CBinarySearchStrategy extends AbstractStrategy {
 	public void init(Crumb crumb) {
 		this.n = crumb.n;
 		this.k = crumb.k;
-		this.isLastElement = false;
 		this.subset = new int[k];
 		this.identity = new int[k];
-		this.m = 0;
-		this.h = k;
 		for (int j = 0; j < k; j++) {
-			subset[j] = j;
+			subset[j] = (n - k) + j;
 			identity[j] = (n - k) + j;
 		}
 	}
 
 	@Override
 	public byte[] algorithm(Crumb crumb) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		byte[] result = crumb.processSubset(subset, identity);
-		if (result != null) {
-			return result;
-		}
-		while (!isLastElement) {
-			subset = nextKSBAlgorithm();
-			result = crumb.processSubset(subset, identity);
-			if (result != null) {
-				return result;
-			}
-		}
-		return null;
+		return binarySearch(subset, 0, 0, k, crumb);
 	}
 
-	private int[] nextKSBAlgorithm() {
-		// TODO implement algorithm.
-	//	System.out.println(this);
-		if (isLastElement) {
-			return null;
-		}
-		if (m < n - h - 1) {
-			h = 0;
-		}
-		h++;
-		m = subset[k - h];
-		for (int j = 0; j < h; j++) {
-			subset[k + j - h] = m + j + 1;
-			if (subset[0] == n - k) {
-				isLastElement = true;
+	private byte[] binarySearch(int[] subset, int i, int l, int k, Crumb crumb)
+			throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		int dc = crumb.dc(subset, identity);
+	//	System.out.println(print(subset) + " " + dc);
+		if (dc <= crumb.d) {
+			if (dc == crumb.d) {
+				byte[] result = crumb.processSubset(subset, identity);
+				if (result != null) {
+					return result;
+				}
 			}
+			return binarySearch(slide(subset, l, k), i, l, k, crumb);
+		} else {
+			if (l == k - 1) {
+				return binarySearch(jumpAndSlide(subset, i, l - 1, k), i, l - 1, k, crumb);
+			}
+			return binarySearch(jump(subset, i, l + 1, k), i, l + 1, k, crumb);
 		}
-		return subset;
 	}
 
-	@Override
-	public String toString() {
+	private int[] slide(int[] subset, int l, int k) {
+		int[] result = new int[k];
+		for (int j = 0; j < l; j++) {
+			result[j] = subset[j];
+		}
+		for (int j = l; j < k; j++) {
+			result[j] = subset[j] - 1;
+		}
+		return result;
+	}
+
+	private int[] jump(int[] subset, int i, int l, int k) {
+		int[] result = new int[k];
+		for (int j = 0; j < l; j++) {
+			result[j] = subset[j];
+		}
+		for (int j = l; j < k; j++) {
+			result[j] = identity[j];
+		}
+		return result;
+	}
+	
+	private int[] jumpAndSlide(int[] subset, int i, int l, int k) {
+		int[] result = new int[k];
+		for (int j = 0; j < l; j++) {
+			result[j] = subset[j] - 1;
+		}
+		for (int j = l; j < k; j++) {
+			result[j] = identity[j];
+		}
+		return result;
+	}
+
+	public String print(int[] subset) {
 		String result = "";
 		for (int i = 0; i < subset.length; i++) {
 			result += subset[i] + " ";
 		}
-		result += "\t" + m + "\t" + h;
 		return result;
 	}
 

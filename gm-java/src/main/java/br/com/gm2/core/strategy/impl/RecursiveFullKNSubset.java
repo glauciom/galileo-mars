@@ -116,7 +116,7 @@ public class RecursiveFullKNSubset {
 	private int[] show(int n, int k, int[] x, int[] y, boolean show, int line) {
 		if (show) {
 			// double d = Math.sqrt(((GL(x) - GU(x)) * (GL(x) - GU(x))));
-		//	System.out.print(rank + " " + GU(x) + " " + "\t");
+			System.out.print(rank + " " + GU(x) + " " + "\t");
 			// System.out.println(rank +" " + GU(x));
 			for (int i = 0; i < k; i++) {
 				System.out.print(x[i] + " ");
@@ -137,7 +137,7 @@ public class RecursiveFullKNSubset {
 	}
 
 	public static void main(String[] args) {
-		int n = 8, k = 4;
+		int n = 8, k = 3;
 		int line = 144;
 		boolean showResults = true;
 		RecursiveFullKNSubset c = new RecursiveFullKNSubset();

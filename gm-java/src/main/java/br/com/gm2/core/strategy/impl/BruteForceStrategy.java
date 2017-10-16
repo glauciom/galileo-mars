@@ -59,15 +59,22 @@ public class BruteForceStrategy extends AbstractStrategy {
 
 	@Override
 	public byte[] algorithm(Crumb crumb) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		byte[] result = crumb.processSubset(subset, identity);
-		if (result != null) {
-			return result;
-		}
-		while (!isLastElement) {
-			subset = nextKSBAlgorithm();
+		int dc = crumb.dc(subset, identity);
+		byte[] result = null;
+		if (dc == crumb.d) {
 			result = crumb.processSubset(subset, identity);
 			if (result != null) {
 				return result;
+			}
+		}
+		while (!isLastElement) {
+			subset = nextKSBAlgorithm();
+			dc = crumb.dc(subset, identity);
+			if (dc == crumb.d) {
+				result = crumb.processSubset(subset, identity);
+				if (result != null) {
+					return result;
+				}
 			}
 		}
 		return null;
