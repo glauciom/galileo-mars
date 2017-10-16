@@ -41,9 +41,10 @@ import br.com.gm2.core.strategy.impl.CBinarySearchStrategy;
 public class MainTest {
 
 	@Test
-	public void packUnpackBruteForceStrategyTest() throws IOException {
+	public void packUnpackStrategyTest() throws IOException {
 		String srcFile = "src/test/resources/test.txt";
 		String packedFile = "src/test/resources/test.txt.gm2";
+		processFiles(new BruteForceStrategy(), srcFile, packedFile);
 		processFiles(new CBinarySearchStrategy(), srcFile, packedFile);
 	}
 

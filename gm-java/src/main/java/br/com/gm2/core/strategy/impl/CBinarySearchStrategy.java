@@ -59,7 +59,7 @@ public class CBinarySearchStrategy extends AbstractStrategy {
 	private byte[] binarySearch(int[] subset, int i, int l, int k, Crumb crumb)
 			throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		int dc = crumb.dc(subset, identity);
-	//	System.out.println(print(subset) + " " + dc);
+		System.out.println(print(subset) + " " + dc);
 		if (dc <= crumb.d) {
 			if (dc == crumb.d) {
 				byte[] result = crumb.processSubset(subset, identity);
@@ -71,8 +71,9 @@ public class CBinarySearchStrategy extends AbstractStrategy {
 		} else {
 			if (l == k - 1) {
 				return binarySearch(jumpAndSlide(subset, i, l - 1, k), i, l - 1, k, crumb);
+			} else {
+				return binarySearch(jump(subset, i, l + 1, k), i, l + 1, k, crumb);
 			}
-			return binarySearch(jump(subset, i, l + 1, k), i, l + 1, k, crumb);
 		}
 	}
 
@@ -97,7 +98,7 @@ public class CBinarySearchStrategy extends AbstractStrategy {
 		}
 		return result;
 	}
-	
+
 	private int[] jumpAndSlide(int[] subset, int i, int l, int k) {
 		int[] result = new int[k];
 		for (int j = 0; j < l; j++) {
