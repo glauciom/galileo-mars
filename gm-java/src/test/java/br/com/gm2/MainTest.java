@@ -44,7 +44,6 @@ public class MainTest {
 	public void packUnpackStrategyTest() throws IOException {
 		String srcFile = "src/test/resources/test.txt";
 		String packedFile = "src/test/resources/test.txt.gm2";
-		processFiles(new BruteForceStrategy(), srcFile, packedFile);
 		processFiles(new CBinaryRecursiveSearchStrategy(), srcFile, packedFile);
 	}
 

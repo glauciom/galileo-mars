@@ -141,6 +141,7 @@ public class Crumb {
 	}
 
 	public byte[] toGMByteArray(BitSet bits, int capacity) {
+		System.out.print(bits + "\t" + d);
 		byte[] bytes = new byte[capacity];
 		for (int i = 0; i < bits.length(); i++) {
 			if (bits.get(i)) {

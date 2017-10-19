@@ -53,73 +53,29 @@ public class CBinaryRecursiveSearchStrategy extends AbstractStrategy {
 
 	@Override
 	public byte[] algorithm(Crumb crumb) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		return binarySearch(subset, 0, crumb);
+		return binarySearch(subset, 0, n - k + 1, crumb);
 	}
 
-	private byte[] binarySearch(int[] subset, int i, Crumb crumb)
+	private byte[] binarySearch(int[] subset, int i, int to, Crumb crumb)
 			throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		int to = ulimit(subset, i);
+		byte[] result = null;
 		for (int j = 0; j < to; j++) {
 			subset = slide(subset, j, i);
 			int dc = crumb.dc(subset, identity);
 			System.out.println(print(subset) + " " + dc);
 			if (dc == crumb.d) {
-				byte[] result = crumb.processSubset(subset, identity);
+				result = crumb.processSubset(subset, identity);
 				if (result != null) {
 					return result;
 				}
 			} else if (dc > crumb.d) {
 				if (i != k - 1) {
-					i++;
-					int to2 = ulimit(subset, i);
-					for (int g = 0; g < to2; g++) {
-						subset = slide(subset, g, i);
-						dc = crumb.dc(subset, identity);
-						System.out.println(print(subset) + " " + dc);
-						if (dc == crumb.d) {
-							byte[] result = crumb.processSubset(subset, identity);
-							if (result != null) {
-								return result;
-							}
-						} else if (dc > crumb.d) {
-							if (i != k - 1) {
-								i++;
-								int to3 = ulimit(subset, i);
-								for (int h = 0; h < to3; h++) {
-									subset = slide(subset, h, i);
-									dc = crumb.dc(subset, identity);
-									System.out.println(print(subset) + " " + dc);
-									if (dc == crumb.d) {
-										byte[] result = crumb.processSubset(subset, identity);
-										if (result != null) {
-											return result;
-										}
-									} else if (dc > crumb.d) {
-										if (i != k - 1) {
-											i++; // never enters here.
-										} else {
-											i--; // not found, roll back.
-											break;
-										}
-									}
-									if (h == to3 - 1) {
-										i--;
-									}
-								}
-							}
-						}
-						if (g == to2 - 1) {
-							i--;
-						}
-					}
+					result = binarySearch(subset, i + 1, ulimit(subset, i + 1), crumb);
 				}
-			}
-			if (j == to - 1) {
-				i--;
 			}
 		}
 
-		return null;
+		return result;
 	}
 
 	private int ulimit(int[] subset, int i) {
@@ -137,8 +93,6 @@ public class CBinaryRecursiveSearchStrategy extends AbstractStrategy {
 		return subset;
 	}
 
-
-
 	public String print(int[] subset) {
 		String result = "";
 		for (int i = 0; i < subset.length; i++) {
@@ -146,6 +100,5 @@ public class CBinaryRecursiveSearchStrategy extends AbstractStrategy {
 		}
 		return result;
 	}
-
 
 }
