@@ -18,9 +18,11 @@ package br.com.gm2.core.strategy.impl;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import br.com.gm2.core.element.Crumb;
 import br.com.gm2.core.strategy.AbstractStrategy;
+import br.com.gm2.core.strategy.core.Found;
 
 /**
  * Implementation of optimal search strategy
@@ -53,24 +55,31 @@ public class CBinaryRecursiveSearchStrategy extends AbstractStrategy {
 
 	@Override
 	public byte[] algorithm(Crumb crumb) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		return binarySearch(subset, 0, n - k + 1, crumb);
+		byte[] result = null;
+		try {
+			binarySearch(subset, 0, n - k + 1, crumb);
+		} catch (Found f) {
+			result = f.getValue();
+		}
+		return result;
 	}
 
 	private byte[] binarySearch(int[] subset, int i, int to, Crumb crumb)
-			throws NoSuchAlgorithmException, UnsupportedEncodingException {
+			throws NoSuchAlgorithmException, UnsupportedEncodingException, Found {
 		byte[] result = null;
 		for (int j = 0; j < to; j++) {
 			subset = slide(subset, j, i);
 			int dc = crumb.dc(subset, identity);
-			System.out.println(print(subset) + " " + dc);
+			//System.out.println(print(subset) + " " + dc);
 			if (dc == crumb.d) {
 				result = crumb.processSubset(subset, identity);
 				if (result != null) {
-					return result;
+					throw new Found(result);
 				}
 			} else if (dc > crumb.d) {
 				if (i != k - 1) {
-					result = binarySearch(subset, i + 1, ulimit(subset, i + 1), crumb);
+					int[] in = Arrays.copyOf(subset, subset.length);
+					binarySearch(in, i + 1, ulimit(in, i + 1), crumb);
 				}
 			}
 		}
@@ -82,7 +91,7 @@ public class CBinaryRecursiveSearchStrategy extends AbstractStrategy {
 		if (i == 0) {
 			return n - k + 1;
 		} else {
-			return identity[i] - subset[i];
+			return identity[i] - subset[i] + 1;
 		}
 	}
 

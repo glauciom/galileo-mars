@@ -45,14 +45,16 @@ public class MainTest {
 		String srcFile = "src/test/resources/test.txt";
 		String packedFile = "src/test/resources/test.txt.gm2";
 		processFiles(new CBinaryRecursiveSearchStrategy(), srcFile, packedFile);
-	}
-
-	@Test
-	public void packUnpackImageBruteForceStrategyTest() throws IOException {
-		String srcFile = "src/test/resources/lena.jpg";
-		String packedFile = "src/test/resources/lena.jpg.gm2";
+		processFiles(new CBinaryRecursiveSearchStrategy(), srcFile, packedFile);
 		processFiles(new BruteForceStrategy(), srcFile, packedFile);
 	}
+
+//	@Test
+//	public void packUnpackImageBruteForceStrategyTest() throws IOException {
+//		String srcFile = "src/test/resources/lena.jpg";
+//		String packedFile = "src/test/resources/lena.jpg.gm2";
+//		processFiles(new BruteForceStrategy(), srcFile, packedFile);
+//	}
 
 	private void processFiles(AbstractStrategy strategy, String srcFile, String packedFile) throws IOException {
 		long time = System.currentTimeMillis();

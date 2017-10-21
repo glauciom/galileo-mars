@@ -103,6 +103,7 @@ public class Crumb {
 		if (inverse) {
 			this.k = (byte) -this.k;
 		}
+		System.out.println("Input: " + set + "\t" + d + "\n");
 		this.uniqueness = SHA(toGMByteArray(set, b.length));
 		return this;
 	}
@@ -141,7 +142,6 @@ public class Crumb {
 	}
 
 	public byte[] toGMByteArray(BitSet bits, int capacity) {
-		System.out.print(bits + "\t" + d);
 		byte[] bytes = new byte[capacity];
 		for (int i = 0; i < bits.length(); i++) {
 			if (bits.get(i)) {

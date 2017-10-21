@@ -25,6 +25,11 @@ import org.apfloat.ApcomplexMath;
 import org.apfloat.Apfloat;
 import org.apfloat.ApfloatMath;
 
+/**
+ * Defines big operators for big numbers.
+ * @author glauciom
+ *
+ */
 public class BigOperator {
 
 	private static int precision(String number) {
