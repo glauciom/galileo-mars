@@ -17,6 +17,7 @@
 package br.com.gm2;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -27,6 +28,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import br.com.gm2.core.element.Crumb;
+import br.com.gm2.core.element.GMFileFormat;
 import br.com.gm2.core.io.GMPack;
 import br.com.gm2.core.io.GMUnpack;
 import br.com.gm2.core.strategy.AbstractStrategy;
@@ -45,19 +47,37 @@ public class MainTest {
 	public void packUnpackStrategyTest() throws IOException {
 		String srcFile = "src/test/resources/test.txt";
 		String packedFile = "src/test/resources/test.txt.gm2";
-		processFiles(new BruteForceStrategy(), srcFile, packedFile);
-		processFiles(new CBinaryRecursiveSearchStrategy(), srcFile, packedFile);
+		processFiles(new BruteForceStrategy(), srcFile, packedFile, false);
+		processFiles(new CBinaryRecursiveSearchStrategy(), srcFile, packedFile, false);
 	}
 
-	// @Test
-	// public void packUnpackImageBruteForceStrategyTest() throws IOException {
-	// String srcFile = "src/test/resources/lena.jpg";
-	// String packedFile = "src/test/resources/lena.jpg.gm2";
-	// processFiles(new CBinaryRecursiveSearchStrategy(), srcFile, packedFile);
-	// processFiles(new BruteForceStrategy(), srcFile, packedFile);
-	// }
+	@Test
+	public void spectralTest() throws IOException {
+		String dir = "src/test/resources/";
+		for (int i = -128; i < 128; i++) {
+			File f = new File(dir + String.valueOf(i));
+			FileOutputStream out = new FileOutputStream(f);
+			byte b = (byte) i;
+			System.out.print("Processing File: " + b);
+			out.write(new byte[] { b });
+			out.close();
+			boolean result = processFiles(new CBinaryRecursiveSearchStrategy(), f.getAbsolutePath(),
+					f.getAbsolutePath() + GMFileFormat.gm2, true);
+			Assert.assertTrue(result);
+			System.out.println(" " + result);
+		}
+	}
 
-	private void processFiles(AbstractStrategy strategy, String srcFile, String packedFile) throws IOException {
+	@Test
+	public void packUnpackImageBruteForceStrategyTest() throws IOException {
+		String srcFile = "src/test/resources/lena.jpg";
+		String packedFile = "src/test/resources/lena.jpg.gm2";
+		processFiles(new CBinaryRecursiveSearchStrategy(), srcFile, packedFile, false);
+		processFiles(new BruteForceStrategy(), srcFile, packedFile, false);
+	}
+
+	private boolean processFiles(AbstractStrategy strategy, String srcFile, String packedFile, boolean deleteSrcFiles)
+			throws IOException {
 		GMPack pack = new GMPack();
 		pack.crumbIt(srcFile);
 		GMUnpack unpack = new GMUnpack();
@@ -69,8 +89,13 @@ public class MainTest {
 		System.out.println("Number of Calls: " + Crumb.metrics.toString());
 		byte[] contentSrc = Files.readAllBytes(Paths.get(src.getAbsolutePath()));
 		byte[] contentDest = Files.readAllBytes(Paths.get(dest.getAbsolutePath()));
-		Assert.assertTrue(Arrays.equals(contentSrc, contentDest));
 		dest.delete();
+		if (deleteSrcFiles) {
+			src.delete();
+			new File(packedFile).delete();
+		}
+		return Arrays.equals(contentSrc, contentDest);
+
 	}
 
 }
