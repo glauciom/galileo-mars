@@ -36,7 +36,6 @@ public abstract class AbstractStrategy implements DefaultStrategy, UnpackStrateg
 
 	@Override
 	public byte[] execute(Crumb crumb) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		Crumb.metrics = new AtomicLong(0);
 		this.init(crumb);
 		return algorithm(crumb);
 	}

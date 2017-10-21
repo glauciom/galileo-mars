@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -44,31 +45,32 @@ public class MainTest {
 	public void packUnpackStrategyTest() throws IOException {
 		String srcFile = "src/test/resources/test.txt";
 		String packedFile = "src/test/resources/test.txt.gm2";
-		processFiles(new CBinaryRecursiveSearchStrategy(), srcFile, packedFile);
-		processFiles(new CBinaryRecursiveSearchStrategy(), srcFile, packedFile);
 		processFiles(new BruteForceStrategy(), srcFile, packedFile);
+		processFiles(new CBinaryRecursiveSearchStrategy(), srcFile, packedFile);
 	}
 
-//	@Test
-//	public void packUnpackImageBruteForceStrategyTest() throws IOException {
-//		String srcFile = "src/test/resources/lena.jpg";
-//		String packedFile = "src/test/resources/lena.jpg.gm2";
-//		processFiles(new BruteForceStrategy(), srcFile, packedFile);
-//	}
+	// @Test
+	// public void packUnpackImageBruteForceStrategyTest() throws IOException {
+	// String srcFile = "src/test/resources/lena.jpg";
+	// String packedFile = "src/test/resources/lena.jpg.gm2";
+	// processFiles(new CBinaryRecursiveSearchStrategy(), srcFile, packedFile);
+	// processFiles(new BruteForceStrategy(), srcFile, packedFile);
+	// }
 
 	private void processFiles(AbstractStrategy strategy, String srcFile, String packedFile) throws IOException {
-		long time = System.currentTimeMillis();
 		GMPack pack = new GMPack();
 		pack.crumbIt(srcFile);
 		GMUnpack unpack = new GMUnpack();
 		File src = new File(srcFile);
+		long time = System.currentTimeMillis();
+		Crumb.metrics = new AtomicLong(0);
 		File dest = unpack.unCrumbIt(strategy, packedFile);
+		System.out.println("Time Elapsed: " + (System.currentTimeMillis() - time) + " milliseconds");
+		System.out.println("Number of Calls: " + Crumb.metrics.toString());
 		byte[] contentSrc = Files.readAllBytes(Paths.get(src.getAbsolutePath()));
 		byte[] contentDest = Files.readAllBytes(Paths.get(dest.getAbsolutePath()));
 		Assert.assertTrue(Arrays.equals(contentSrc, contentDest));
 		dest.delete();
-		System.out.println("Time Elapsed: " + (System.currentTimeMillis() - time) + " milliseconds");
-		System.out.println("Number of Calls: " + Crumb.metrics.toString());
 	}
 
 }

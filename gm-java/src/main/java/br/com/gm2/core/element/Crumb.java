@@ -103,7 +103,7 @@ public class Crumb {
 		if (inverse) {
 			this.k = (byte) -this.k;
 		}
-		System.out.println("Input: " + set + "\t" + d + "\n");
+		//System.out.println("Input: " + set + "\t" + d + "\n");
 		this.uniqueness = SHA(toGMByteArray(set, b.length));
 		return this;
 	}
