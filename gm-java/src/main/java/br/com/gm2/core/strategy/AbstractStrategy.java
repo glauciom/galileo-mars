@@ -18,7 +18,6 @@ package br.com.gm2.core.strategy;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
-import java.util.concurrent.atomic.AtomicLong;
 
 import br.com.gm2.core.element.Crumb;
 
