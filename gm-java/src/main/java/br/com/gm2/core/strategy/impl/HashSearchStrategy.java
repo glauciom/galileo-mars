@@ -25,20 +25,20 @@ import br.com.gm2.core.strategy.AbstractStrategy;
 import br.com.gm2.core.strategy.core.Found;
 
 /**
- * Implementation of optimal search strategy
+ * Implementation of hash-based function strategy.
  * 
  * @author glauciom
  *
  */
-public class CBinaryRecursiveSearchStrategy extends AbstractStrategy {
+public class HashSearchStrategy extends AbstractStrategy {
 
 	private int k, n;
 
-	public CBinaryRecursiveSearchStrategy(int[] subset) {
+	public HashSearchStrategy(int[] subset) {
 		this.subset = subset;
 	}
 
-	public CBinaryRecursiveSearchStrategy() {
+	public HashSearchStrategy() {
 	}
 
 	@Override
@@ -57,20 +57,21 @@ public class CBinaryRecursiveSearchStrategy extends AbstractStrategy {
 	public byte[] algorithm(Crumb crumb) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		byte[] result = null;
 		try {
-			binarySearch(subset, 0, n - k + 1, crumb);
+			hashSearch(subset, 0, n - k + 1, crumb);
 		} catch (Found f) {
 			result = f.getValue();
 		}
 		return result;
 	}
 
-	private byte[] binarySearch(int[] subset, int i, int to, Crumb crumb)
+	private byte[] hashSearch(int[] subset, int i, int to, Crumb crumb)
 			throws NoSuchAlgorithmException, UnsupportedEncodingException, Found {
 		byte[] result = null;
-		for (int j = 0; j < to; j++) {
+		int h = G(subset, identity[i], i, crumb.d, k);
+		for (int j = h; j < to; j++) {
 			subset = slide(subset, j, i);
 			int dc = crumb.dc(subset, identity);
-	//		System.out.println(print(subset) + " " + dc);
+		//	System.out.println(print(subset) + " " + dc);
 			if (dc == crumb.d) {
 				result = crumb.processSubset(subset, identity);
 				if (result != null) {
@@ -79,12 +80,30 @@ public class CBinaryRecursiveSearchStrategy extends AbstractStrategy {
 			} else if (dc > crumb.d) {
 				if (i != k - 1) {
 					int[] in = Arrays.copyOf(subset, subset.length);
-					binarySearch(in, i + 1, ulimit(in, i + 1), crumb);
+					hashSearch(in, i + 1, ulimit(in, i + 1), crumb);
+				} else {
+					break;
 				}
 			}
 		}
 
 		return result;
+	}
+
+	private int dp(int[] subset, int i) {
+		int res = 0;
+		for (int j = 0; j < i; j++) {
+			int part = identity[j] - subset[j];
+			res += part * part;
+		}
+		return res;
+	}
+
+	private int G(int[] subset, int y, int i, int d, int k) {
+		int part = (k - i) * (d - dp(subset, i));
+		double sqr = Math.sqrt(part) / (k - i);
+		int res = (int) Math.floor(y - sqr);
+		return y - res;
 	}
 
 	private int ulimit(int[] subset, int i) {

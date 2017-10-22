@@ -34,6 +34,7 @@ import br.com.gm2.core.io.GMUnpack;
 import br.com.gm2.core.strategy.AbstractStrategy;
 import br.com.gm2.core.strategy.impl.BruteForceStrategy;
 import br.com.gm2.core.strategy.impl.CBinaryRecursiveSearchStrategy;
+import br.com.gm2.core.strategy.impl.HashSearchStrategy;
 
 /**
  * Defines main test cases for this program.
@@ -42,13 +43,25 @@ import br.com.gm2.core.strategy.impl.CBinaryRecursiveSearchStrategy;
  *
  */
 public class MainTest {
+	//
+	// @Test
+	// public void packUnpackStrategyTest() throws IOException {
+	// String srcFile = "src/test/resources/test.txt";
+	// String packedFile = "src/test/resources/test.txt.gm2";
+	// // processFiles(new BruteForceStrategy(), srcFile, packedFile, false);
+	// boolean assertTrue = processFiles(new CBinaryRecursiveSearchStrategy(),
+	// srcFile, packedFile, false);
+	// Assert.assertTrue(assertTrue);
+	// }
 
 	@Test
-	public void packUnpackStrategyTest() throws IOException {
+	public void packUnpackHashStrategyTest() throws IOException {
 		String srcFile = "src/test/resources/test.txt";
 		String packedFile = "src/test/resources/test.txt.gm2";
-		processFiles(new BruteForceStrategy(), srcFile, packedFile, false);
-		processFiles(new CBinaryRecursiveSearchStrategy(), srcFile, packedFile, false);
+		boolean aTrue = processFiles(new CBinaryRecursiveSearchStrategy(), srcFile, packedFile, false);
+		Assert.assertTrue(aTrue);
+		boolean assertTrue = processFiles(new HashSearchStrategy(), srcFile, packedFile, false);
+		Assert.assertTrue(assertTrue);
 	}
 
 	@Test
@@ -61,7 +74,7 @@ public class MainTest {
 			System.out.print("Processing File: " + b);
 			out.write(new byte[] { b });
 			out.close();
-			boolean result = processFiles(new CBinaryRecursiveSearchStrategy(), f.getAbsolutePath(),
+			boolean result = processFiles(new HashSearchStrategy(), f.getAbsolutePath(),
 					f.getAbsolutePath() + GMFileFormat.gm2, true);
 			Assert.assertTrue(result);
 			System.out.println(" " + result);
@@ -72,8 +85,9 @@ public class MainTest {
 	public void packUnpackImageBruteForceStrategyTest() throws IOException {
 		String srcFile = "src/test/resources/lena.jpg";
 		String packedFile = "src/test/resources/lena.jpg.gm2";
-		processFiles(new CBinaryRecursiveSearchStrategy(), srcFile, packedFile, false);
-		processFiles(new BruteForceStrategy(), srcFile, packedFile, false);
+		//processFiles(new CBinaryRecursiveSearchStrategy(), srcFile, packedFile, false);
+		boolean aTrue = processFiles(new HashSearchStrategy(), srcFile, packedFile, false);
+		Assert.assertTrue(aTrue);
 	}
 
 	private boolean processFiles(AbstractStrategy strategy, String srcFile, String packedFile, boolean deleteSrcFiles)
