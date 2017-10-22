@@ -32,7 +32,6 @@ import br.com.gm2.core.element.GMFileFormat;
 import br.com.gm2.core.io.GMPack;
 import br.com.gm2.core.io.GMUnpack;
 import br.com.gm2.core.strategy.AbstractStrategy;
-import br.com.gm2.core.strategy.impl.BruteForceStrategy;
 import br.com.gm2.core.strategy.impl.CBinaryRecursiveSearchStrategy;
 import br.com.gm2.core.strategy.impl.HashSearchStrategy;
 
@@ -55,11 +54,19 @@ public class MainTest {
 	// }
 
 	@Test
-	public void packUnpackHashStrategyTest() throws IOException {
+	public void packUnpackCBinaryAndHashStrategyTest() throws IOException {
 		String srcFile = "src/test/resources/test.txt";
 		String packedFile = "src/test/resources/test.txt.gm2";
 		boolean aTrue = processFiles(new CBinaryRecursiveSearchStrategy(), srcFile, packedFile, false);
 		Assert.assertTrue(aTrue);
+		boolean assertTrue = processFiles(new HashSearchStrategy(), srcFile, packedFile, false);
+		Assert.assertTrue(assertTrue);
+	}
+	
+	@Test
+	public void packUnpackHashStrategyTest() throws IOException {
+		String srcFile = "src/test/resources/test.txt";
+		String packedFile = "src/test/resources/test.txt.gm2";
 		boolean assertTrue = processFiles(new HashSearchStrategy(), srcFile, packedFile, false);
 		Assert.assertTrue(assertTrue);
 	}
