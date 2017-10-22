@@ -67,7 +67,7 @@ public class HashSearchStrategy extends AbstractStrategy {
 	private byte[] hashSearch(int[] subset, int i, int to, Crumb crumb)
 			throws NoSuchAlgorithmException, UnsupportedEncodingException, Found {
 		byte[] result = null;
-		int h = G(subset, identity[i], i, crumb.d, k);
+		int h = G(subset, i, crumb.d, k);
 		for (int j = h; j < to; j++) {
 			subset = slide(subset, j, i);
 			int dc = crumb.dc(subset, identity);
@@ -80,7 +80,7 @@ public class HashSearchStrategy extends AbstractStrategy {
 			} else if (dc > crumb.d) {
 				if (i != k - 1) {
 					int[] in = Arrays.copyOf(subset, subset.length);
-					hashSearch(in, i + 1, ulimit(in, i + 1), crumb);
+					result = hashSearch(in, i + 1, ulimit(in, i + 1), crumb);
 				} else {
 					break;
 				}
@@ -99,11 +99,14 @@ public class HashSearchStrategy extends AbstractStrategy {
 		return res;
 	}
 
-	private int G(int[] subset, int y, int i, int d, int k) {
+	private int G(int[] subset, int i, int d, int k) {
+		if (identity.length == 0) {
+			return 0;
+		}
 		int part = (k - i) * (d - dp(subset, i));
 		double sqr = Math.sqrt(part) / (k - i);
-		int res = (int) Math.floor(y - sqr);
-		return y - res;
+		int res = (int) Math.floor(identity[i] - sqr);
+		return identity[i] - res;
 	}
 
 	private int ulimit(int[] subset, int i) {

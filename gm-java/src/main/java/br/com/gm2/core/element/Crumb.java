@@ -24,8 +24,6 @@ import java.util.Arrays;
 import java.util.BitSet;
 import java.util.concurrent.atomic.AtomicLong;
 
-import br.com.gm2.core.content.CrumbPacket;
-
 /**
  * Crumb Header (for each file portion): - 1 bit, boolean: inverse (volatile,
  * during process, if k > default packet size / 2). Default: false; 4 bytes,
@@ -44,9 +42,9 @@ public class Crumb {
 	public int d;
 	public byte[] uniqueness;
 	public boolean inverse = false;
-	public static int SHA_SIZE = 32;
+	public static int SHA_SIZE = 20;
 	public static int HEADER_SIZE = 5;
-	public static int truncateBytes = SHA_SIZE - CrumbPacket.CP64B.getSize();
+	public static int truncateBytes = 0;
 	public static final int crumbSize = SHA_SIZE + HEADER_SIZE - truncateBytes;
 
 	public static AtomicLong metrics = new AtomicLong();
@@ -110,7 +108,7 @@ public class Crumb {
 
 	public byte[] SHA(byte[] b) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		MessageDigest md;
-		md = MessageDigest.getInstance("SHA-256");
+		md = MessageDigest.getInstance("SHA-1");
 		md.update(b);
 		byte res[] = md.digest();
 		byte[] out = new byte[res.length - truncateBytes];

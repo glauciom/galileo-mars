@@ -70,7 +70,7 @@ public class CBinaryRecursiveSearchStrategy extends AbstractStrategy {
 		for (int j = 0; j < to; j++) {
 			subset = slide(subset, j, i);
 			int dc = crumb.dc(subset, identity);
-	//		System.out.println(print(subset) + " " + dc);
+		//	 System.out.println(print(subset) + " " + dc);
 			if (dc == crumb.d) {
 				result = crumb.processSubset(subset, identity);
 				if (result != null) {
@@ -80,6 +80,8 @@ public class CBinaryRecursiveSearchStrategy extends AbstractStrategy {
 				if (i != k - 1) {
 					int[] in = Arrays.copyOf(subset, subset.length);
 					binarySearch(in, i + 1, ulimit(in, i + 1), crumb);
+				} else {
+					break;
 				}
 			}
 		}
