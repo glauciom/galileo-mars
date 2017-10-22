@@ -22,7 +22,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.BitSet;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Crumb Header (for each file portion): - 1 bit, boolean: inverse (volatile,
@@ -47,7 +46,7 @@ public class Crumb {
 	public static int truncateBytes = 0;
 	public static final int crumbSize = SHA_SIZE + HEADER_SIZE - truncateBytes;
 
-	public static AtomicLong metrics = new AtomicLong();
+	public static long metrics = 0;
 
 	/**
 	 * Constructor for packing process
@@ -101,7 +100,7 @@ public class Crumb {
 		if (inverse) {
 			this.k = (byte) -this.k;
 		}
-		//System.out.println("Input: " + set + "\t" + d + "\n");
+		// System.out.println("Input: " + set + "\t" + d + "\n");
 		this.uniqueness = SHA(toGMByteArray(set, b.length));
 		return this;
 	}
@@ -172,7 +171,7 @@ public class Crumb {
 	}
 
 	public int dc(int[] subset, int[] identity) {
-		metrics.addAndGet(1);
+		metrics++;
 		int result = 0;
 		for (int i = 0; i < identity.length; i++) {
 			int diff = identity[i] - subset[i];

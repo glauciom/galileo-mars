@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -93,12 +92,22 @@ public class MainTest {
 	public void packUnpackImageStrategyTest() throws IOException {
 		String srcFile = "src/test/resources/lena.jpg";
 		String packedFile = "src/test/resources/lena.jpg.gm2";
-		System.out.println("CBinaryRecursiveSearchStrategy");
-		boolean aTrue = processFiles(new CBinaryRecursiveSearchStrategy(), srcFile, packedFile, false);
-		Assert.assertTrue(aTrue);
 		System.out.println("HashSearchStrategy");
 		boolean assertTrue = processFiles(new HashSearchStrategy(), srcFile, packedFile, false);
 		Assert.assertTrue(assertTrue);
+	}
+
+	@Test
+	public void packUnpackImageBothStrategyTest() throws IOException {
+		String srcFile = "src/test/resources/lena.jpg";
+		String packedFile = "src/test/resources/lena.jpg.gm2";
+		System.out.println("HashSearchStrategy");
+		boolean assertTrue = processFiles(new HashSearchStrategy(), srcFile, packedFile, false);
+		Assert.assertTrue(assertTrue);
+		System.out.println("CBinaryRecursiveSearchStrategy");
+		boolean aTrue = processFiles(new CBinaryRecursiveSearchStrategy(), srcFile, packedFile, false);
+		Assert.assertTrue(aTrue);
+
 	}
 
 	private boolean processFiles(AbstractStrategy strategy, String srcFile, String packedFile, boolean deleteSrcFiles)
@@ -107,11 +116,11 @@ public class MainTest {
 		pack.crumbIt(srcFile);
 		GMUnpack unpack = new GMUnpack();
 		File src = new File(srcFile);
-		long time = System.currentTimeMillis();
-		Crumb.metrics = new AtomicLong(0);
+		Crumb.metrics = 0;
+		long time = System.nanoTime();
 		File dest = unpack.unCrumbIt(strategy, packedFile);
-		System.out.println("Time Elapsed: " + (System.currentTimeMillis() - time) + " milliseconds");
-		System.out.println("Number of Calls: " + Crumb.metrics.toString());
+		System.out.println("Time Elapsed: " + (System.nanoTime() - time) + " nanoseconds");
+		System.out.println("Number of Calls: " + Crumb.metrics);
 		byte[] contentSrc = Files.readAllBytes(Paths.get(src.getAbsolutePath()));
 		byte[] contentDest = Files.readAllBytes(Paths.get(dest.getAbsolutePath()));
 		dest.delete();
