@@ -93,13 +93,12 @@ public class MainTest {
 	public void packUnpackImageStrategyTest() throws IOException {
 		String srcFile = "src/test/resources/lena.jpg";
 		String packedFile = "src/test/resources/lena.jpg.gm2";
-		try {
-		boolean aTrue = processFiles(new HashSearchStrategy(), srcFile, packedFile, false);
+		System.out.println("CBinaryRecursiveSearchStrategy");
+		boolean aTrue = processFiles(new CBinaryRecursiveSearchStrategy(), srcFile, packedFile, false);
 		Assert.assertTrue(aTrue);
-		} catch(Exception e) {
-			e.printStackTrace();
-			Assert.fail(e.getMessage());
-		}
+		System.out.println("HashSearchStrategy");
+		boolean assertTrue = processFiles(new HashSearchStrategy(), srcFile, packedFile, false);
+		Assert.assertTrue(assertTrue);
 	}
 
 	private boolean processFiles(AbstractStrategy strategy, String srcFile, String packedFile, boolean deleteSrcFiles)
