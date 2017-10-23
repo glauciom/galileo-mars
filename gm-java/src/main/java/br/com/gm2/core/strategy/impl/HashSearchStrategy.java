@@ -69,7 +69,7 @@ public class HashSearchStrategy extends AbstractStrategy {
         for (int j = h; j < to; j++) {
             subset = slide(subset, j, i);
             int dc = crumb.dc(subset, identity);
-            // System.out.println(print(subset) + " " + dc);
+   //          System.out.println(print(subset) + " " + dc);
             if (dc == crumb.d) {
                 result = crumb.processSubset(subset, identity);
                 if (result != null) {

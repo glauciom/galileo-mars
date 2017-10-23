@@ -119,7 +119,7 @@ public class MainTest {
 		Crumb.metrics = 0;
 		long time = System.nanoTime();
 		File dest = unpack.unCrumbIt(strategy, packedFile);
-		System.out.println("Time Elapsed: " + (System.nanoTime() - time) + " nanoseconds");
+		System.out.println("Time Elapsed: " + ((float) (System.nanoTime() - time)/1_000_000_000) + " seconds");
 		System.out.println("Number of Calls: " + Crumb.metrics);
 		byte[] contentSrc = Files.readAllBytes(Paths.get(src.getAbsolutePath()));
 		byte[] contentDest = Files.readAllBytes(Paths.get(dest.getAbsolutePath()));
