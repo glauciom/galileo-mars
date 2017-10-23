@@ -134,25 +134,33 @@ public class Crumb {
 				bytes[i / GMFileFormat.BYTE_SIZE] |= 1 << (i % GMFileFormat.BYTE_SIZE);
 			}
 		}
+		return bytes;
+	}
 
+	public byte[] toGMByteArray(int[] bits, int capacity) {
+		byte[] bytes = new byte[capacity];
+		for (int i = 0; i < bits.length; i++) {
+			bytes[bits[i] / GMFileFormat.BYTE_SIZE] |= 1 << (bits[i] % GMFileFormat.BYTE_SIZE);
+		}
+		return bytes;
+	}
+
+	public byte[] toGMByteArrayFlip(byte[] bytes, int capacity) {
+		for (int i = 0; i < bytes.length; i++) {
+			bytes[i] = (byte) ~bytes[i];
+		}
 		return bytes;
 	}
 
 	public byte[] processSubset(int[] subset, int[] identity)
 			throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		BitSet set = new BitSet(subset.length);
-		for (int i = 0; i < subset.length; i++) {
-			set.set(subset[i]);
-		}
-		byte[] content = toGMByteArray(set, n / GMFileFormat.BYTE_SIZE);
+		byte[] content = toGMByteArray(subset, n / GMFileFormat.BYTE_SIZE);
 		if (uniqueness == hash(content)) {
 			if (inverse) {
-				set.flip(0, n);
-				content = toGMByteArray(set, n / GMFileFormat.BYTE_SIZE);
+				content = toGMByteArrayFlip(content, n / GMFileFormat.BYTE_SIZE);
 			}
 			return content;
 		}
-
 		return null;
 	}
 
