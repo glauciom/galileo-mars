@@ -22,8 +22,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
-import org.junit.Assert;
-
 import br.com.gm2.core.element.Crumb;
 import br.com.gm2.core.io.GMPack;
 import br.com.gm2.core.io.GMUnpack;
