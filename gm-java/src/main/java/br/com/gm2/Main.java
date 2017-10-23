@@ -16,6 +16,20 @@
  */
 package br.com.gm2;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+
+import org.junit.Assert;
+
+import br.com.gm2.core.element.Crumb;
+import br.com.gm2.core.io.GMPack;
+import br.com.gm2.core.io.GMUnpack;
+import br.com.gm2.core.strategy.AbstractStrategy;
+import br.com.gm2.core.strategy.impl.HashSearchStrategy;
+
 /**
  * Main Application. Defines the user options and triggers the classes.
  * 
@@ -23,11 +37,37 @@ package br.com.gm2;
  *
  */
 public class Main {
-    public static void main(String[] args) {
-        if (args == null) {
-            System.out.println("Usage: gm2 <file>");
-        } else if (args.length == 1) {
+	public static void main(String[] args) throws IOException {
+		Main.packUnpackImageStrategyTest();
+	}
 
-        }
-    }
+	public static void packUnpackImageStrategyTest() throws IOException {
+		String srcFile = "src/test/resources/lena.jpg";
+		String packedFile = "src/test/resources/lena.jpg.gm2";
+		System.out.println("HashSearchStrategy");
+		boolean assertTrue = processFiles(new HashSearchStrategy(), srcFile, packedFile, false);
+		System.out.println(assertTrue);
+	}
+
+	private static boolean processFiles(AbstractStrategy strategy, String srcFile, String packedFile,
+			boolean deleteSrcFiles) throws IOException {
+		GMPack pack = new GMPack();
+		pack.crumbIt(srcFile);
+		GMUnpack unpack = new GMUnpack();
+		File src = new File(srcFile);
+		Crumb.metrics = 0;
+		long time = System.nanoTime();
+		File dest = unpack.unCrumbIt(strategy, packedFile);
+		System.out.println("Time Elapsed: " + ((float) (System.nanoTime() - time) / 1_000_000_000) + " seconds");
+		System.out.println("Number of Calls: " + Crumb.metrics);
+		byte[] contentSrc = Files.readAllBytes(Paths.get(src.getAbsolutePath()));
+		byte[] contentDest = Files.readAllBytes(Paths.get(dest.getAbsolutePath()));
+		dest.delete();
+		if (deleteSrcFiles) {
+			src.delete();
+			new File(packedFile).delete();
+		}
+		return Arrays.equals(contentSrc, contentDest);
+
+	}
 }

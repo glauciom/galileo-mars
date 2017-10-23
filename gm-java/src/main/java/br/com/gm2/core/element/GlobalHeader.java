@@ -35,7 +35,7 @@ public class GlobalHeader {
 	public int totalSize;
 	public transient int remainingSize;
 
-	public static final int globalHeaderSize = 5;
+	public static final int globalHeaderSize = 4;
 
 	public GlobalHeader(int totalSize) {
 		this.metadata = new Metadata();
@@ -45,14 +45,14 @@ public class GlobalHeader {
 
 	public byte[] getBytes() {
 		ByteBuffer bb = ByteBuffer.allocate(globalHeaderSize);
-		bb.put(metadata.getByte());
+		//bb.put(metadata.getByte());
 		bb.putInt(totalSize);
 		return bb.array();
 	}
 
 	public static GlobalHeader readBytes(byte[] b) {
 		ByteBuffer bb = ByteBuffer.wrap(b);
-		bb.get(); // ignoring first byte read.
+		//bb.get(); // ignoring first byte read.
 		return new GlobalHeader(bb.getInt());
 
 	}
