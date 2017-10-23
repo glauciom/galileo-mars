@@ -159,8 +159,18 @@ public class Crumb {
 	public int dc(int[] subset, int[] identity) {
 		metrics++;
 		int result = 0;
-		for (int i = 0; i < identity.length; i++) {
-			int diff = identity[i] - subset[i];
+		for (int j = 0; j < identity.length; j++) {
+			int diff = identity[j] - subset[j];
+			result += diff * diff;
+		}
+		return result;
+	}
+
+	public int dc(int[] subset, int[] identity, int i, int dp) {
+		metrics++;
+		int result = dp;
+		for (int j = i; j < identity.length; j++) {
+			int diff = identity[j] - subset[j];
 			result += diff * diff;
 		}
 		return result;
