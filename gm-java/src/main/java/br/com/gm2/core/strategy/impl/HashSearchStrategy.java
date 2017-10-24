@@ -18,7 +18,6 @@ package br.com.gm2.core.strategy.impl;
 
 import br.com.gm2.core.element.Crumb;
 import br.com.gm2.core.strategy.AbstractStrategy;
-import br.com.gm2.core.strategy.core.Found;
 
 /**
  * Implementation of hash-based function strategy.
@@ -28,100 +27,90 @@ import br.com.gm2.core.strategy.core.Found;
  */
 public class HashSearchStrategy extends AbstractStrategy {
 
-    private int k, n, d;
-    private Crumb crumb;
+	private int k, n, d;
+	private Crumb crumb;
 
-    public HashSearchStrategy(int[] subset) {
-        this.subset = subset;
-    }
+	public HashSearchStrategy(int[] subset) {
+		this.subset = subset;
+	}
 
-    public HashSearchStrategy() {
-    }
+	public HashSearchStrategy() {
+	}
 
-    @Override
-    public void init(Crumb crumb) {
-        this.crumb = crumb;
-        this.n = crumb.n;
-        this.k = crumb.k;
-        this.d = crumb.d;
-        this.subset = new int[k];
-        this.identity = new int[k];
-        for (int j = 0; j < k; j++) {
-            subset[j] = (n - k) + j;
-            identity[j] = (n - k) + j;
-        }
-    }
+	@Override
+	public void init(Crumb crumb) {
+		this.crumb = crumb;
+		this.n = crumb.n;
+		this.k = crumb.k;
+		this.d = crumb.d;
+		this.subset = new int[k];
+		this.identity = new int[k];
+		for (int j = 0; j < k; j++) {
+			subset[j] = (n - k) + j;
+			identity[j] = (n - k) + j;
+		}
+	}
 
-    @Override
-    public byte[] algorithm(Crumb crumb) {
-        byte[] result = null;
-        try {
-            hashSearch(subset, 0, n - k + 1, d, 0);
-        } catch (Found f) {
-            result = f.getValue();
-        }
-        return result;
-    }
+	@Override
+	public byte[] algorithm(Crumb crumb) {
+		return hashSearch(subset, 0, n - k + 1, d, 0);
+	}
 
-    private byte[] hashSearch(int[] subset, int i, int to, int dp, int dpa) throws Found {
-        byte[] result = null;
-        int h = G(subset, i, dp, k);
-        for (int j = h; j < to; j++) {
-            subset = slide(subset, j, i);
-            j = verify(subset, j, to, i,  dp, dpa, result);
-        }
+	private byte[] hashSearch(int[] subset, int i, int limit, int dp, int dpa) {
+		byte[] result = null;
+		int h = G(subset, i, dp, k);
+		for (int j = h; j < limit; j++) {
+			subset = slide(subset, j, i);
+			int dc = crumb.dc(subset, identity, i, dpa);
+			// System.out.println(print(subset) + " " + dc);
+			if (dc == d) {
+				result = crumb.processSubset(subset, identity);
+				if (result != null) {
+					j = limit;
+				}
+			} else if (dc > d) {
+				if (i < k - 1) {
+					int diff = identity[i] == subset[i] ? 0 : identity[i] - subset[i];
+					int loc = diff == 0 ? 0 : diff * diff;
+					result = hashSearch(subset, i + 1, diff + 1, dp - loc, dpa + loc);
+					if (result != null) {
+						j = limit;
+					}
+				} else {
+					j = limit;
+				}
+			}
+		}
+		return result;
+	}
 
-        return result;
-    }
+	private int G(int[] subset, int i, int dp, int k) {
+		if (identity.length == 0) {
+			return 0;
+		}
+		int ki = k - i;
+		int part = ki * dp;
+		double sqr = Math.sqrt(part);
+		if (ki > 1) {
+			sqr = sqr / ki;
+		}
+		int res = (int) Math.floor(identity[i] - sqr);
+		return identity[i] - res;
+	}
 
-    private int verify(int[] subset, int j, int to, int i, int dp, int dpa, byte[] result) throws Found {
-        int dc = crumb.dc(subset, identity, i, dpa);
-        // System.out.println(print(subset) + " " + dc);
-        if (dc == d) {
-            result = crumb.processSubset(subset, identity);
-            if (result != null) {
-                throw new Found(result);
-            }
-        } else if (dc > d) {
-            if (i < k - 1) {
-                int diff = identity[i] == subset[i] ? 0 : identity[i] - subset[i];
-                int loc = diff == 0 ? 0 : diff * diff;
-                hashSearch(subset, i + 1, diff + 1, dp - loc, dpa + loc);
-            } else {
-                return to;
-            }
-        }
-        return j;
-    }
-    
+	private int[] slide(int[] subset, int l, int i) {
+		for (int j = i; j < k; j++) {
+			subset[j] = identity[j] - l;
+		}
+		return subset;
+	}
 
-    private int G(int[] subset, int i, int dp, int k) {
-        if (identity.length == 0) {
-            return 0;
-        }
-        int ki = k - i;
-        int part = ki * dp;
-        double sqr = Math.sqrt(part);
-        if (ki > 1) {
-            sqr = sqr / ki;
-        }
-        int res = (int) Math.floor(identity[i] - sqr);
-        return identity[i] - res;
-    }
-
-    private int[] slide(int[] subset, int l, int i) {
-        for (int j = i; j < k; j++) {
-            subset[j] = identity[j] - l;
-        }
-        return subset;
-    }
-
-    public String print(int[] subset) {
-        String result = "";
-        for (int i = 0; i < subset.length; i++) {
-            result += subset[i] + " ";
-        }
-        return result;
-    }
+	public String print(int[] subset) {
+		String result = "";
+		for (int i = 0; i < subset.length; i++) {
+			result += subset[i] + " ";
+		}
+		return result;
+	}
 
 }
