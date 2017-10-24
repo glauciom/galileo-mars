@@ -68,26 +68,32 @@ public class HashSearchStrategy extends AbstractStrategy {
         int h = G(subset, i, dp, k);
         for (int j = h; j < to; j++) {
             subset = slide(subset, j, i);
-            int dc = crumb.dc(subset, identity, i, dpa);
-            // System.out.println(print(subset) + " " + dc);
-            if (dc == d) {
-                result = crumb.processSubset(subset, identity);
-                if (result != null) {
-                    throw new Found(result);
-                }
-            } else if (dc > d) {
-                if (i < k - 1) {
-                    int diff = identity[i] == subset[i] ? 0 : identity[i] - subset[i];
-                    int loc = diff == 0 ? 0 : diff * diff;
-                    hashSearch(subset, i + 1, diff + 1, dp - loc, dpa + loc);
-                } else {
-                    break;
-                }
-            }
+            j = verify(subset, j, to, i,  dp, dpa, result);
         }
 
         return result;
     }
+
+    private int verify(int[] subset, int j, int to, int i, int dp, int dpa, byte[] result) throws Found {
+        int dc = crumb.dc(subset, identity, i, dpa);
+        // System.out.println(print(subset) + " " + dc);
+        if (dc == d) {
+            result = crumb.processSubset(subset, identity);
+            if (result != null) {
+                throw new Found(result);
+            }
+        } else if (dc > d) {
+            if (i < k - 1) {
+                int diff = identity[i] == subset[i] ? 0 : identity[i] - subset[i];
+                int loc = diff == 0 ? 0 : diff * diff;
+                hashSearch(subset, i + 1, diff + 1, dp - loc, dpa + loc);
+            } else {
+                return to;
+            }
+        }
+        return j;
+    }
+    
 
     private int G(int[] subset, int i, int dp, int k) {
         if (identity.length == 0) {

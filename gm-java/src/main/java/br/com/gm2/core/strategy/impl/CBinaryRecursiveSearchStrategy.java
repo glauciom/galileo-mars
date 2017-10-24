@@ -78,7 +78,7 @@ public class CBinaryRecursiveSearchStrategy extends AbstractStrategy {
                     int[] in = Arrays.copyOf(subset, subset.length);
                     binarySearch(in, i + 1, ulimit(in, i + 1), crumb);
                 } else {
-                    break;
+                    j = to;
                 }
             }
         }
