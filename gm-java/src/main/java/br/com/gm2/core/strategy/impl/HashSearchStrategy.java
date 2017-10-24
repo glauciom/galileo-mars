@@ -57,12 +57,14 @@ public class HashSearchStrategy extends AbstractStrategy {
 	}
 
 	private byte[] hashSearch(int[] subset, int i, int limit, int dp, int dpa) {
+		return localSearch(subset, i, limit, dp, dpa, G(subset, i, dp, k));
+	}
+
+	private byte[] localSearch(int[] subset, int i, int limit, int dp, int dpa, int h) {
 		byte[] result = null;
-		int h = G(subset, i, dp, k);
 		for (int j = h; j < limit; j++) {
 			subset = slide(subset, j, i);
 			int dc = crumb.dc(subset, identity, i, dpa);
-			// System.out.println(print(subset) + " " + dc);
 			if (dc == d) {
 				result = crumb.processSubset(subset, identity);
 				if (result != null) {
@@ -104,13 +106,4 @@ public class HashSearchStrategy extends AbstractStrategy {
 		}
 		return subset;
 	}
-
-	public String print(int[] subset) {
-		String result = "";
-		for (int i = 0; i < subset.length; i++) {
-			result += subset[i] + " ";
-		}
-		return result;
-	}
-
 }
