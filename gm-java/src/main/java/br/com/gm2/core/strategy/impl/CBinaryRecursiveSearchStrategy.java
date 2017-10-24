@@ -16,8 +16,6 @@
  */
 package br.com.gm2.core.strategy.impl;
 
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 import br.com.gm2.core.element.Crumb;
@@ -32,84 +30,83 @@ import br.com.gm2.core.strategy.core.Found;
  */
 public class CBinaryRecursiveSearchStrategy extends AbstractStrategy {
 
-	private int k, n;
+    private int k, n;
 
-	public CBinaryRecursiveSearchStrategy(int[] subset) {
-		this.subset = subset;
-	}
+    public CBinaryRecursiveSearchStrategy(int[] subset) {
+        this.subset = subset;
+    }
 
-	public CBinaryRecursiveSearchStrategy() {
-	}
+    public CBinaryRecursiveSearchStrategy() {
+    }
 
-	@Override
-	public void init(Crumb crumb) {
-		this.n = crumb.n;
-		this.k = crumb.k;
-		this.subset = new int[k];
-		this.identity = new int[k];
-		for (int j = 0; j < k; j++) {
-			subset[j] = (n - k) + j;
-			identity[j] = (n - k) + j;
-		}
-	}
+    @Override
+    public void init(Crumb crumb) {
+        this.n = crumb.n;
+        this.k = crumb.k;
+        this.subset = new int[k];
+        this.identity = new int[k];
+        for (int j = 0; j < k; j++) {
+            subset[j] = (n - k) + j;
+            identity[j] = (n - k) + j;
+        }
+    }
 
-	@Override
-	public byte[] algorithm(Crumb crumb) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		byte[] result = null;
-		try {
-			binarySearch(subset, 0, n - k + 1, crumb);
-		} catch (Found f) {
-			result = f.getValue();
-		}
-		return result;
-	}
+    @Override
+    public byte[] algorithm(Crumb crumb) {
+        byte[] result = null;
+        try {
+            binarySearch(subset, 0, n - k + 1, crumb);
+        } catch (Found f) {
+            result = f.getValue();
+        }
+        return result;
+    }
 
-	private byte[] binarySearch(int[] subset, int i, int to, Crumb crumb)
-			throws NoSuchAlgorithmException, UnsupportedEncodingException, Found {
-		byte[] result = null;
-		for (int j = 0; j < to; j++) {
-			subset = slide(subset, j, i);
-			int dc = crumb.dc(subset, identity);
-		//	 System.out.println(print(subset) + " " + dc);
-			if (dc == crumb.d) {
-				result = crumb.processSubset(subset, identity);
-				if (result != null) {
-					throw new Found(result);
-				}
-			} else if (dc > crumb.d) {
-				if (i != k - 1) {
-					int[] in = Arrays.copyOf(subset, subset.length);
-					binarySearch(in, i + 1, ulimit(in, i + 1), crumb);
-				} else {
-					break;
-				}
-			}
-		}
+    private byte[] binarySearch(int[] subset, int i, int to, Crumb crumb) throws Found {
+        byte[] result = null;
+        for (int j = 0; j < to; j++) {
+            subset = slide(subset, j, i);
+            int dc = crumb.dc(subset, identity);
+            // System.out.println(print(subset) + " " + dc);
+            if (dc == crumb.d) {
+                result = crumb.processSubset(subset, identity);
+                if (result != null) {
+                    throw new Found(result);
+                }
+            } else if (dc > crumb.d) {
+                if (i != k - 1) {
+                    int[] in = Arrays.copyOf(subset, subset.length);
+                    binarySearch(in, i + 1, ulimit(in, i + 1), crumb);
+                } else {
+                    break;
+                }
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	private int ulimit(int[] subset, int i) {
-		if (i == 0) {
-			return n - k + 1;
-		} else {
-			return identity[i] - subset[i] + 1;
-		}
-	}
+    private int ulimit(int[] subset, int i) {
+        if (i == 0) {
+            return n - k + 1;
+        } else {
+            return identity[i] - subset[i] + 1;
+        }
+    }
 
-	private int[] slide(int[] subset, int l, int i) {
-		for (int j = i; j < k; j++) {
-			subset[j] = identity[j] - l;
-		}
-		return subset;
-	}
+    private int[] slide(int[] subset, int l, int i) {
+        for (int j = i; j < k; j++) {
+            subset[j] = identity[j] - l;
+        }
+        return subset;
+    }
 
-	public String print(int[] subset) {
-		String result = "";
-		for (int i = 0; i < subset.length; i++) {
-			result += subset[i] + " ";
-		}
-		return result;
-	}
+    public String print(int[] subset) {
+        String result = "";
+        for (int i = 0; i < subset.length; i++) {
+            result += subset[i] + " ";
+        }
+        return result;
+    }
 
 }

@@ -16,9 +16,6 @@
  */
 package br.com.gm2.core.strategy.impl;
 
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
-
 import br.com.gm2.core.element.Crumb;
 import br.com.gm2.core.strategy.AbstractStrategy;
 
@@ -58,7 +55,7 @@ public class BruteForceStrategy extends AbstractStrategy {
 	}
 
 	@Override
-	public byte[] algorithm(Crumb crumb) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+	public byte[] algorithm(Crumb crumb) {
 		int dc = crumb.dc(subset, identity);
 		byte[] result = null;
 		if (dc == crumb.d) {

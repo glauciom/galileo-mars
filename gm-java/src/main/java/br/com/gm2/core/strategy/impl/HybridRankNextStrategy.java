@@ -16,9 +16,7 @@
  */
 package br.com.gm2.core.strategy.impl;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.security.NoSuchAlgorithmException;
 
 import br.com.gm2.core.element.Crumb;
 import br.com.gm2.core.strategy.AbstractStrategy;
@@ -32,78 +30,78 @@ import br.com.gm2.core.strategy.core.BigOperator;
  */
 public class HybridRankNextStrategy extends AbstractStrategy {
 
-	private int n, k, x, y, index;
-	private BigInteger serial, aproximation;
-	private BruteForceStrategy bruteForceStrategy;
+    private int n, k, x, y, index;
+    private BigInteger serial, aproximation;
+    private BruteForceStrategy bruteForceStrategy;
 
-	@Override
-	public byte[] algorithm(Crumb crumb) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    @Override
+    public byte[] algorithm(Crumb crumb) {
 
-		// TODO define jump criteria.
-		String number = "";
+        // TODO define jump criteria.
+        String number = "";
 
-		int[] currentSubset = rankSubset(number);
-		int[] previous = rankSubset(new BigInteger(number).subtract(BigInteger.ONE).toString());
+        int[] currentSubset = rankSubset(number);
+        int[] previous = rankSubset(new BigInteger(number).subtract(BigInteger.ONE).toString());
 
-		int[] indices = getIndices(currentSubset, previous);
+        int[] indices = getIndices(currentSubset, previous);
 
-		bruteForceStrategy = new BruteForceStrategy(subset, indices[0], indices[1]);
+        bruteForceStrategy = new BruteForceStrategy(subset, indices[0], indices[1]);
 
-		return bruteForceStrategy.algorithm(crumb);
-	}
+        return bruteForceStrategy.algorithm(crumb);
+    }
 
-	private int[] getIndices(int[] currentSubset, int[] previous) {
-		int m = 0;
-		int h = k;
-		if (previous != null) {
-			for (int i = 0; i < currentSubset.length; i++) {
-				if (currentSubset[i] != previous[i]) {
-					m = previous[i];
-					h = currentSubset.length - i;
-					return new int[] { m, h };
-				}
-			}
-		}
-		return new int[] { m, h };
-	}
+    private int[] getIndices(int[] currentSubset, int[] previous) {
+        int m = 0;
+        int h = k;
+        if (previous != null) {
+            for (int i = 0; i < currentSubset.length; i++) {
+                if (currentSubset[i] != previous[i]) {
+                    m = previous[i];
+                    h = currentSubset.length - i;
+                    return new int[] { m, h };
+                }
+            }
+        }
+        return new int[] { m, h };
+    }
 
-	private int[] rankSubset(String number) {
-		x = n;
-		y = k - 1;
-		serial = new BigInteger(number);
-		if (serial.equals(BigInteger.ZERO)) {
-			return null;
-		}
+    private int[] rankSubset(String number) {
+        x = n;
+        y = k - 1;
+        serial = new BigInteger(number);
+        if (serial.equals(BigInteger.ZERO)) {
+            return null;
+        }
 
-		aproximation = BigInteger.ZERO;
-		index = 0;
-		for (int i = 0; i < k; i++) {
-			subset[i] = element(serial);
-		}
-		return subset;
-	}
+        aproximation = BigInteger.ZERO;
+        index = 0;
+        for (int i = 0; i < k; i++) {
+            subset[i] = element(serial);
+        }
+        return subset;
+    }
 
-	private int element(BigInteger serial) {
-		BigInteger aux = null;
-		for (int j = 1; j <= x - y + 1; j++) {
-			aux = aproximation.add(BigOperator.getBinomialElements(x - j, y));
-			if (aux.compareTo(serial) < 0)
-				aproximation = aux;
-			else {
-				x = x - j;
-				y = y - 1;
-				index = index + j;
-				return index;
-			}
-		}
-		return index;
-	}
+    private int element(BigInteger serial) {
+        BigInteger aux = null;
+        for (int j = 1; j <= x - y + 1; j++) {
+            aux = aproximation.add(BigOperator.getBinomialElements(x - j, y));
+            if (aux.compareTo(serial) < 0)
+                aproximation = aux;
+            else {
+                x = x - j;
+                y = y - 1;
+                index = index + j;
+                return index;
+            }
+        }
+        return index;
+    }
 
-	@Override
-	public void init(Crumb crumb) {
-		this.n = crumb.n;
-		this.k = crumb.k;
-		this.subset = new int[k];
-	}
+    @Override
+    public void init(Crumb crumb) {
+        this.n = crumb.n;
+        this.k = crumb.k;
+        this.subset = new int[k];
+    }
 
 }
