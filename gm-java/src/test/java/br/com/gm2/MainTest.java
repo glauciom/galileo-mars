@@ -22,6 +22,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -32,6 +35,7 @@ import br.com.gm2.core.io.GMPack;
 import br.com.gm2.core.io.GMUnpack;
 import br.com.gm2.core.strategy.AbstractStrategy;
 import br.com.gm2.core.strategy.impl.CBinaryRecursiveSearchStrategy;
+import br.com.gm2.core.strategy.impl.HashParallelSearchStrategy;
 import br.com.gm2.core.strategy.impl.HashSearchStrategy;
 
 /**
@@ -41,6 +45,8 @@ import br.com.gm2.core.strategy.impl.HashSearchStrategy;
  *
  */
 public class MainTest {
+	
+	ThreadPoolExecutor executor = new ThreadPoolExecutor(4, 4, 0, TimeUnit.SECONDS, new SynchronousQueue<Runnable>());
 
 	@Test
 	public void packUnpackStrategyTest() throws IOException {
@@ -98,6 +104,15 @@ public class MainTest {
 	}
 
 	@Test
+	public void packUnpackImageParallelStrategyTest() throws IOException {
+		String srcFile = "src/test/resources/lena.jpg";
+		String packedFile = "src/test/resources/lena.jpg.gm2";
+		System.out.println("HashSearchStrategy");
+		boolean assertTrue = processFiles(new HashParallelSearchStrategy(executor), srcFile, packedFile, false);
+		Assert.assertTrue(assertTrue);
+	}
+
+	@Test
 	public void packUnpackImageBothStrategyTest() throws IOException {
 		String srcFile = "src/test/resources/lena.jpg";
 		String packedFile = "src/test/resources/lena.jpg.gm2";
@@ -119,7 +134,7 @@ public class MainTest {
 		Crumb.metrics = 0;
 		long time = System.nanoTime();
 		File dest = unpack.unCrumbIt(strategy, packedFile);
-		System.out.println("Time Elapsed: " + ((float) (System.nanoTime() - time)/1_000_000_000) + " seconds");
+		System.out.println("Time Elapsed: " + ((float) (System.nanoTime() - time) / 1_000_000_000) + " seconds");
 		System.out.println("Number of Calls: " + Crumb.metrics);
 		byte[] contentSrc = Files.readAllBytes(Paths.get(src.getAbsolutePath()));
 		byte[] contentDest = Files.readAllBytes(Paths.get(dest.getAbsolutePath()));

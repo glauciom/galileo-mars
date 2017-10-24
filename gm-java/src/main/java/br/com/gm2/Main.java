@@ -21,12 +21,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import br.com.gm2.core.element.Crumb;
 import br.com.gm2.core.io.GMPack;
 import br.com.gm2.core.io.GMUnpack;
 import br.com.gm2.core.strategy.AbstractStrategy;
-import br.com.gm2.core.strategy.impl.HashSearchStrategy;
+import br.com.gm2.core.strategy.impl.HashParallelSearchStrategy;
 
 /**
  * Main Application. Defines the user options and triggers the classes.
@@ -43,7 +46,9 @@ public class Main {
 		String srcFile = "src/test/resources/lena.jpg";
 		String packedFile = "src/test/resources/lena.jpg.gm2";
 		System.out.println("HashSearchStrategy");
-		boolean assertTrue = processFiles(new HashSearchStrategy(), srcFile, packedFile, false);
+		ThreadPoolExecutor executor = new ThreadPoolExecutor(4, 4, 0, TimeUnit.SECONDS, new SynchronousQueue<Runnable>());
+		boolean assertTrue = processFiles(new HashParallelSearchStrategy(executor), srcFile, packedFile, false);
+		executor.shutdownNow();
 		System.out.println(assertTrue);
 	}
 
