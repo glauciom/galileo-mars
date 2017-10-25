@@ -53,7 +53,11 @@ public class HashSearchStrategy extends AbstractStrategy {
 
 	@Override
 	public byte[] algorithm(Crumb crumb) {
-		return hashSearch(subset, 0, n - k + 1, d, 0);
+		if (subset.length == 0) {
+			return crumb.processSubset(subset, identity);
+		} else {
+			return hashSearch(subset, 0, n - k + 1, d, 0);
+		}
 	}
 
 	private byte[] hashSearch(int[] subset, int i, int limit, int dp, int dpa) {

@@ -46,7 +46,7 @@ import br.com.gm2.core.strategy.impl.OptimizedHashSearchStrategy;
  *
  */
 public class MainTest {
-	
+
 	ThreadPoolExecutor executor = new ThreadPoolExecutor(4, 4, 0, TimeUnit.SECONDS, new SynchronousQueue<Runnable>());
 
 	@Test
@@ -103,7 +103,7 @@ public class MainTest {
 		boolean assertTrue = processFiles(new OptimizedHashSearchStrategy(), srcFile, packedFile, false);
 		Assert.assertTrue(assertTrue);
 	}
-	
+
 	@Test
 	public void packUnpackHashImageStrategyTest() throws IOException {
 		String srcFile = "src/test/resources/lena.jpg";
