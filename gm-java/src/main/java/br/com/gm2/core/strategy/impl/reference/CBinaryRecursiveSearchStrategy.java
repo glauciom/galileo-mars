@@ -14,94 +14,94 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package br.com.gm2.core.strategy.impl;
+package br.com.gm2.core.strategy.impl.reference;
+
+import java.util.Arrays;
 
 import br.com.gm2.core.element.Crumb;
 import br.com.gm2.core.strategy.AbstractStrategy;
 
 /**
- * Implementation of brute force strategy.
+ * Implementation of optimal search strategy
  * 
  * @author glauciom
  *
  */
-public class BruteForceStrategy extends AbstractStrategy {
+public class CBinaryRecursiveSearchStrategy extends AbstractStrategy {
 
-	private int m, h, k, n;
-	private boolean isLastElement;
+	private int k, n;
 
-	public BruteForceStrategy(int[] subset, int m, int h) {
+	public CBinaryRecursiveSearchStrategy(int[] subset) {
 		this.subset = subset;
-		this.m = m;
-		this.h = h;
 	}
 
-	public BruteForceStrategy() {
+	public CBinaryRecursiveSearchStrategy() {
 	}
 
 	@Override
 	public void init(Crumb crumb) {
 		this.n = crumb.n;
 		this.k = crumb.k;
-		this.isLastElement = false;
 		this.subset = new int[k];
 		this.identity = new int[k];
-		this.m = 0;
-		this.h = k;
 		for (int j = 0; j < k; j++) {
-			subset[j] = j;
+			subset[j] = (n - k) + j;
 			identity[j] = (n - k) + j;
 		}
 	}
 
 	@Override
 	public byte[] algorithm(Crumb crumb) {
-		int dc = crumb.dc(subset, identity);
+		return binarySearch(subset, 0, n - k + 1, crumb);
+	}
+
+	private byte[] binarySearch(int[] subset, int i, int to, Crumb crumb) {
 		byte[] result = null;
-		if (dc == crumb.d) {
-			result = crumb.processSubset(subset, identity);
-			if (result != null) {
-				return result;
-			}
-		}
-		while (!isLastElement) {
-			subset = nextKSBAlgorithm();
-			dc = crumb.dc(subset, identity);
+		for (int j = 0; j < to; j++) {
+			subset = slide(subset, j, i);
+			int dc = crumb.dc(subset, identity);
+			// System.out.println(print(subset) + " " + dc);
 			if (dc == crumb.d) {
 				result = crumb.processSubset(subset, identity);
 				if (result != null) {
-					return result;
+					j = to;
+				}
+			} else if (dc > crumb.d) {
+				if (i != k - 1) {
+					int[] in = Arrays.copyOf(subset, subset.length);
+					result = binarySearch(in, i + 1, ulimit(in, i + 1), crumb);
+					if (result != null) {
+						j = to;
+					}
+				} else {
+					j = to;
 				}
 			}
 		}
-		return null;
+
+		return result;
 	}
 
-	private int[] nextKSBAlgorithm() {
-		if (isLastElement) {
-			return null;
+	private int ulimit(int[] subset, int i) {
+		if (i == 0) {
+			return n - k + 1;
+		} else {
+			return identity[i] - subset[i] + 1;
 		}
-		if (m < n - h - 1) {
-			h = 0;
-		}
-		h++;
-		m = subset[k - h];
-		for (int j = 0; j < h; j++) {
-			subset[k + j - h] = m + j + 1;
-			if (subset[0] == n - k) {
-				isLastElement = true;
-			}
+	}
+
+	private int[] slide(int[] subset, int l, int i) {
+		for (int j = i; j < k; j++) {
+			subset[j] = identity[j] - l;
 		}
 		return subset;
 	}
 
-	@Override
-	public String toString() {
+	public String print(int[] subset) {
 		String result = "";
 		for (int i = 0; i < subset.length; i++) {
 			result += subset[i] + " ";
 		}
-		result += "\t" + m + "\t" + h;
 		return result;
 	}
 

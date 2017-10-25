@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package br.com.gm2.core.strategy.impl;
+package br.com.gm2.core.strategy.impl.reference;
 
 /**
  * Class responsible for generate all Subsets of size N with K elements.

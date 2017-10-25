@@ -14,35 +14,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package br.com.gm2.core.strategy.impl;
-
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.ThreadPoolExecutor.CallerRunsPolicy;
+package br.com.gm2.core.strategy.impl.reference;
 
 import br.com.gm2.core.element.Crumb;
 import br.com.gm2.core.strategy.AbstractStrategy;
 
 /**
- * Implementation of hash-based function strategy.
+ * Implementation of hash-based function strategy (optimized).
  * 
  * @author glauciom
  *
  */
-public class HashParallelSearchStrategy extends AbstractStrategy {
+public class OptimizedHashSearchStrategy extends AbstractStrategy {
 
 	private int k, n, d;
 	private Crumb crumb;
 
-	ThreadPoolExecutor executor;
-
-	public HashParallelSearchStrategy(int[] subset) {
+	public OptimizedHashSearchStrategy(int[] subset) {
 		this.subset = subset;
 	}
 
-	public HashParallelSearchStrategy(ThreadPoolExecutor executor) {
-		this.executor = executor;
+	public OptimizedHashSearchStrategy() {
 	}
 
 	@Override
@@ -57,59 +49,44 @@ public class HashParallelSearchStrategy extends AbstractStrategy {
 			subset[j] = (n - k) + j;
 			identity[j] = (n - k) + j;
 		}
-		executor.setRejectedExecutionHandler(new CallerRunsPolicy());
 	}
 
 	@Override
 	public byte[] algorithm(Crumb crumb) {
-		try {
-			return hashSearch(subset, 0, n - k + 1, d, 0);
-		} catch (InterruptedException | ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (subset.length == 0) {
+			return crumb.processSubset(subset, identity);
+		} else {
+			return hashSearch(subset, 0, 0, d, 0);
 		}
-		return null;
 	}
 
-	private byte[] hashSearch(int[] subset, int i, int limit, int dp, int dpa)
-			throws InterruptedException, ExecutionException {
-
-		byte[] result = CompletableFuture.supplyAsync(() -> {
-			try {
-				return localSearch(subset, i, limit, dp, dpa, G(subset, i, dp, k));
-			} catch (InterruptedException | ExecutionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}, executor).join();
-
-		return result;
+	private byte[] hashSearch(int[] subset, int i, int limit, int dp, int dpa) {
+		return localSearch(subset, i, limit, dp, dpa, G(subset, i, dp, k));
 	}
 
-	private byte[] localSearch(int[] subset, int i, int limit, int dp, int dpa, int h)
-			throws InterruptedException, ExecutionException {
+	private byte[] localSearch(int[] subset, int i, int limit, int dp, int dpa, int h) {
 		byte[] result = null;
-		for (int j = h; j < limit; j++) {
-			subset = slide(subset, j, i);
+		for (subset[i] = h; subset[i] >= limit; subset[i]--) {
+			subset = slide(subset, i);
 			int dc = crumb.dc(subset, identity, i, dpa);
 			if (dc == d) {
 				result = crumb.processSubset(subset, identity);
 				if (result != null) {
-					j = limit;
+					break;
 				}
 			} else if (dc > d) {
 				if (i < k - 1) {
 					int diff = identity[i] == subset[i] ? 0 : identity[i] - subset[i];
 					int loc = diff == 0 ? 0 : diff * diff;
-					result = hashSearch(subset, i + 1, diff + 1, dp - loc, dpa + loc);
+					result = hashSearch(subset, i + 1, subset[i] + 1, dp - loc, dpa + loc);
 					if (result != null) {
-						j = limit;
+						break;
 					}
 				} else {
-					j = limit;
+					break;
 				}
 			}
+
 		}
 		return result;
 	}
@@ -125,13 +102,22 @@ public class HashParallelSearchStrategy extends AbstractStrategy {
 			sqr = sqr / ki;
 		}
 		int res = (int) Math.floor(identity[i] - sqr);
-		return identity[i] - res;
+		return res;
 	}
 
-	private int[] slide(int[] subset, int l, int i) {
+	private int[] slide(int[] subset, int i) {
+		int l = identity[i] - subset[i];
 		for (int j = i; j < k; j++) {
 			subset[j] = identity[j] - l;
 		}
 		return subset;
+	}
+
+	public String print(int[] subset) {
+		String result = "";
+		for (int i = 0; i < subset.length; i++) {
+			result += subset[i] + " ";
+		}
+		return result;
 	}
 }

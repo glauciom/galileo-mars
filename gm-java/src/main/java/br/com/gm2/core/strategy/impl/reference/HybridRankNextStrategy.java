@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package br.com.gm2.core.strategy.impl;
+package br.com.gm2.core.strategy.impl.reference;
 
 import java.math.BigInteger;
 

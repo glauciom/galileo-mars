@@ -34,10 +34,11 @@ import br.com.gm2.core.element.GMFileFormat;
 import br.com.gm2.core.io.GMPack;
 import br.com.gm2.core.io.GMUnpack;
 import br.com.gm2.core.strategy.AbstractStrategy;
-import br.com.gm2.core.strategy.impl.CBinaryRecursiveSearchStrategy;
-import br.com.gm2.core.strategy.impl.HashParallelSearchStrategy;
-import br.com.gm2.core.strategy.impl.HashSearchStrategy;
-import br.com.gm2.core.strategy.impl.OptimizedHashSearchStrategy;
+import br.com.gm2.core.strategy.impl.QuickSearchStrategy;
+import br.com.gm2.core.strategy.impl.reference.CBinaryRecursiveSearchStrategy;
+import br.com.gm2.core.strategy.impl.reference.HashParallelSearchStrategy;
+import br.com.gm2.core.strategy.impl.reference.HashSearchStrategy;
+import br.com.gm2.core.strategy.impl.reference.OptimizedHashSearchStrategy;
 
 /**
  * Defines main test cases for this program.
@@ -132,8 +133,32 @@ public class MainTest {
 		System.out.println("OptimizedHashSearchStrategy");
 		boolean aTrue = processFiles(new OptimizedHashSearchStrategy(), srcFile, packedFile, false);
 		Assert.assertTrue(aTrue);
-
 	}
+	
+	@Test
+	public void packUnpackImageQuickStrategyTest() throws IOException {
+		String srcFile = "src/test/resources/lena.jpg";
+		String packedFile = "src/test/resources/lena.jpg.gm2";
+		System.out.println("HashSearchStrategy");
+		boolean assertTrue = processFiles(new HashSearchStrategy(), srcFile, packedFile, false);
+		Assert.assertTrue(assertTrue);
+		System.out.println("OptimizedHashSearchStrategy");
+		boolean aTrue = processFiles(new QuickSearchStrategy(), srcFile, packedFile, false);
+		Assert.assertTrue(aTrue);
+	}
+	
+	@Test
+	public void packUnpackImageOptimizedAndQuickStrategyTest() throws IOException {
+		String srcFile = "src/test/resources/lena.jpg";
+		String packedFile = "src/test/resources/lena.jpg.gm2";
+		System.out.println("HashSearchStrategy");
+		boolean assertTrue = processFiles(new OptimizedHashSearchStrategy(), srcFile, packedFile, false);
+		Assert.assertTrue(assertTrue);
+		System.out.println("OptimizedHashSearchStrategy");
+		boolean aTrue = processFiles(new QuickSearchStrategy(), srcFile, packedFile, false);
+		Assert.assertTrue(aTrue);
+	}
+	
 
 	private boolean processFiles(AbstractStrategy strategy, String srcFile, String packedFile, boolean deleteSrcFiles)
 			throws IOException {

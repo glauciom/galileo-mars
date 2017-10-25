@@ -14,27 +14,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package br.com.gm2.core.strategy.impl;
+package br.com.gm2.core.strategy.impl.reference;
 
 import br.com.gm2.core.element.Crumb;
 import br.com.gm2.core.strategy.AbstractStrategy;
 
 /**
- * Implementation of hash-based function strategy (optimized).
+ * Implementation of hash-based function strategy.
  * 
  * @author glauciom
  *
  */
-public class OptimizedHashSearchStrategy extends AbstractStrategy {
+public class HashSearchStrategy extends AbstractStrategy {
 
 	private int k, n, d;
 	private Crumb crumb;
 
-	public OptimizedHashSearchStrategy(int[] subset) {
+	public HashSearchStrategy(int[] subset) {
 		this.subset = subset;
 	}
 
-	public OptimizedHashSearchStrategy() {
+	public HashSearchStrategy() {
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class OptimizedHashSearchStrategy extends AbstractStrategy {
 		if (subset.length == 0) {
 			return crumb.processSubset(subset, identity);
 		} else {
-			return hashSearch(subset, 0, 0, d, 0);
+			return hashSearch(subset, 0, n - k + 1, d, 0);
 		}
 	}
 
@@ -66,27 +66,26 @@ public class OptimizedHashSearchStrategy extends AbstractStrategy {
 
 	private byte[] localSearch(int[] subset, int i, int limit, int dp, int dpa, int h) {
 		byte[] result = null;
-		for (subset[i] = h; subset[i] >= limit; subset[i]--) {
-			subset = slide(subset, i);
+		for (int j = h; j < limit; j++) {
+			subset = slide(subset, j, i);
 			int dc = crumb.dc(subset, identity, i, dpa);
 			if (dc == d) {
 				result = crumb.processSubset(subset, identity);
 				if (result != null) {
-					break;
+					j = limit;
 				}
 			} else if (dc > d) {
 				if (i < k - 1) {
 					int diff = identity[i] == subset[i] ? 0 : identity[i] - subset[i];
 					int loc = diff == 0 ? 0 : diff * diff;
-					result = hashSearch(subset, i + 1, subset[i] + 1, dp - loc, dpa + loc);
+					result = hashSearch(subset, i + 1, diff + 1, dp - loc, dpa + loc);
 					if (result != null) {
-						break;
+						j = limit;
 					}
 				} else {
-					break;
+					j = limit;
 				}
 			}
-
 		}
 		return result;
 	}
@@ -102,22 +101,14 @@ public class OptimizedHashSearchStrategy extends AbstractStrategy {
 			sqr = sqr / ki;
 		}
 		int res = (int) Math.floor(identity[i] - sqr);
-		return res;
+		return identity[i] - res;
 	}
 
-	private int[] slide(int[] subset, int i) {
-		int l = identity[i] - subset[i];
+	private int[] slide(int[] subset, int l, int i) {
 		for (int j = i; j < k; j++) {
 			subset[j] = identity[j] - l;
 		}
 		return subset;
 	}
 
-	public String print(int[] subset) {
-		String result = "";
-		for (int i = 0; i < subset.length; i++) {
-			result += subset[i] + " ";
-		}
-		return result;
-	}
 }
