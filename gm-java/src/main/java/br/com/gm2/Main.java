@@ -21,15 +21,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import br.com.gm2.core.element.Crumb;
 import br.com.gm2.core.io.GMPack;
 import br.com.gm2.core.io.GMUnpack;
 import br.com.gm2.core.strategy.AbstractStrategy;
-import br.com.gm2.core.strategy.impl.HashParallelSearchStrategy;
+import br.com.gm2.core.strategy.impl.OptimizedHashSearchStrategy;
 
 /**
  * Main Application. Defines the user options and triggers the classes.
@@ -45,10 +42,14 @@ public class Main {
 	public static void packUnpackImageStrategyTest() throws IOException {
 		String srcFile = "src/test/resources/lena.jpg";
 		String packedFile = "src/test/resources/lena.jpg.gm2";
-		System.out.println("HashSearchStrategy");
-		ThreadPoolExecutor executor = new ThreadPoolExecutor(4, 4, 0, TimeUnit.SECONDS, new SynchronousQueue<Runnable>());
-		boolean assertTrue = processFiles(new HashParallelSearchStrategy(executor), srcFile, packedFile, false);
-		executor.shutdownNow();
+		// String srcFile = "src/test/resources/test.txt";
+		// String packedFile = "src/test/resources/test.txt.gm2";
+		System.out.println("OptimizedHashSearchStrategy");
+		// ThreadPoolExecutor executor = new ThreadPoolExecutor(4, 4, 0,
+		// TimeUnit.SECONDS,
+		// new SynchronousQueue<Runnable>());
+		boolean assertTrue = processFiles(new OptimizedHashSearchStrategy(), srcFile, packedFile, false);
+		// executor.shutdownNow();
 		System.out.println(assertTrue);
 	}
 

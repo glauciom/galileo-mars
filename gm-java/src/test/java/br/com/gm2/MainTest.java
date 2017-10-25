@@ -37,6 +37,7 @@ import br.com.gm2.core.strategy.AbstractStrategy;
 import br.com.gm2.core.strategy.impl.CBinaryRecursiveSearchStrategy;
 import br.com.gm2.core.strategy.impl.HashParallelSearchStrategy;
 import br.com.gm2.core.strategy.impl.HashSearchStrategy;
+import br.com.gm2.core.strategy.impl.OptimizedHashSearchStrategy;
 
 /**
  * Defines main test cases for this program.
@@ -86,7 +87,7 @@ public class MainTest {
 			System.out.println("Processing File: " + b);
 			out.write(new byte[] { b });
 			out.close();
-			boolean result = processFiles(new HashSearchStrategy(), f.getAbsolutePath(),
+			boolean result = processFiles(new OptimizedHashSearchStrategy(), f.getAbsolutePath(),
 					f.getAbsolutePath() + GMFileFormat.gm2, true);
 			Assert.assertTrue(result);
 			System.out.println(" " + result);
@@ -96,6 +97,15 @@ public class MainTest {
 
 	@Test
 	public void packUnpackImageStrategyTest() throws IOException {
+		String srcFile = "src/test/resources/lena.jpg";
+		String packedFile = "src/test/resources/lena.jpg.gm2";
+		System.out.println("OptimizedHashSearchStrategy");
+		boolean assertTrue = processFiles(new OptimizedHashSearchStrategy(), srcFile, packedFile, false);
+		Assert.assertTrue(assertTrue);
+	}
+	
+	@Test
+	public void packUnpackHashImageStrategyTest() throws IOException {
 		String srcFile = "src/test/resources/lena.jpg";
 		String packedFile = "src/test/resources/lena.jpg.gm2";
 		System.out.println("HashSearchStrategy");
@@ -119,8 +129,8 @@ public class MainTest {
 		System.out.println("HashSearchStrategy");
 		boolean assertTrue = processFiles(new HashSearchStrategy(), srcFile, packedFile, false);
 		Assert.assertTrue(assertTrue);
-		System.out.println("CBinaryRecursiveSearchStrategy");
-		boolean aTrue = processFiles(new CBinaryRecursiveSearchStrategy(), srcFile, packedFile, false);
+		System.out.println("OptimizedHashSearchStrategy");
+		boolean aTrue = processFiles(new OptimizedHashSearchStrategy(), srcFile, packedFile, false);
 		Assert.assertTrue(aTrue);
 
 	}
