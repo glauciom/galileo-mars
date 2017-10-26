@@ -18,6 +18,7 @@ package br.com.gm2.core.strategy.impl;
 
 import br.com.gm2.core.element.Crumb;
 import br.com.gm2.core.strategy.AbstractStrategy;
+import br.com.gm2.core.strategy.core.MVOperator;
 
 /**
  * Implementation of Quick Search Strategy. Sequential Approach.
@@ -28,7 +29,7 @@ import br.com.gm2.core.strategy.AbstractStrategy;
  */
 public class SimviStrategy extends AbstractStrategy {
 
-    private int k, n, d;
+    private int k, d;
     private Crumb crumb;
 
     public SimviStrategy(int[] subset) {
@@ -41,7 +42,7 @@ public class SimviStrategy extends AbstractStrategy {
     @Override
     public void init(Crumb crumb) {
         this.crumb = crumb;
-        this.n = crumb.n;
+        int n = crumb.n;
         this.k = crumb.k;
         this.d = crumb.d;
         this.subset = new int[k];
@@ -55,7 +56,7 @@ public class SimviStrategy extends AbstractStrategy {
     @Override
     public byte[] algorithm() {
         if (subset.length == 0) {
-            return crumb.processSubset(subset, identity);
+            return MVOperator.processSubset(crumb, subset, identity);
         } else {
             return search(subset, 0, 0, d, 0);
         }
@@ -71,7 +72,7 @@ public class SimviStrategy extends AbstractStrategy {
 
     private byte[] inspect(int[] subset, int i, int limit, int dp, int dpa) {
         byte[] result = null;
-        int dc = crumb.measure(shift(subset, i), identity, i, dpa);
+        int dc = MVOperator.measure(shift(subset, i), identity, i, dpa);
         if (dc == d) {
             result = verify(subset, i, limit);
         } else if (dc > d) {
@@ -81,7 +82,7 @@ public class SimviStrategy extends AbstractStrategy {
     }
 
     private byte[] verify(int[] subset, int i, int limit) {
-        byte[] result = crumb.processSubset(subset, identity);
+        byte[] result = MVOperator.processSubset(crumb, subset, identity);
         if (result != null) {
             subset[i] = limit;
         }
