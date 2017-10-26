@@ -16,8 +16,6 @@
  */
 package br.com.gm2.core.strategy;
 
-import br.com.gm2.core.element.Crumb;
-
 /**
  * Defines a default interface for different unpack strategies.
  * 
@@ -26,6 +24,6 @@ import br.com.gm2.core.element.Crumb;
  */
 public interface UnpackStrategy {
 
-    public byte[] algorithm(Crumb crumb);
+    public byte[] algorithm();
 
 }

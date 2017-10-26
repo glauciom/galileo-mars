@@ -33,7 +33,7 @@ public abstract class AbstractStrategy implements DefaultStrategy, UnpackStrateg
 	@Override
 	public byte[] execute(Crumb crumb) {
 		this.init(crumb);
-		return algorithm(crumb);
+		return algorithm();
 	}
 
 }

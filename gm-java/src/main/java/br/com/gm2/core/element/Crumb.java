@@ -153,10 +153,11 @@ public class Crumb {
     }
 
     public byte[] processSubset(int[] subset, int[] identity) {
-        byte[] content = toGMByteArray(subset, n / GMFileFormat.BYTE_SIZE);
+        int capacity = n / GMFileFormat.BYTE_SIZE;
+        byte[] content = toGMByteArray(subset, capacity);
         if (uniqueness == hash(content)) {
             if (inverse) {
-                content = toGMByteArrayFlip(content, n / GMFileFormat.BYTE_SIZE);
+                content = toGMByteArrayFlip(content, capacity);
             }
             return content;
         }
@@ -173,7 +174,7 @@ public class Crumb {
         return result;
     }
 
-    public int dc(int[] subset, int[] identity, int i, int dp) {
+    public int measure(int[] subset, int[] identity, int i, int dp) {
         metrics++;
         int result = dp;
         for (int j = i; j < identity.length; j++) {

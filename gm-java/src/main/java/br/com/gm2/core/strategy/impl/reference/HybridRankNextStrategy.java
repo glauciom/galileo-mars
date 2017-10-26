@@ -35,7 +35,7 @@ public class HybridRankNextStrategy extends AbstractStrategy {
     private BruteForceStrategy bruteForceStrategy;
 
     @Override
-    public byte[] algorithm(Crumb crumb) {
+    public byte[] algorithm() {
 
         // TODO define jump criteria.
         String number = "";
@@ -47,7 +47,7 @@ public class HybridRankNextStrategy extends AbstractStrategy {
 
         bruteForceStrategy = new BruteForceStrategy(subset, indices[0], indices[1]);
 
-        return bruteForceStrategy.algorithm(crumb);
+        return bruteForceStrategy.algorithm();
     }
 
     private int[] getIndices(int[] currentSubset, int[] previous) {

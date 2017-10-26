@@ -26,7 +26,7 @@ import br.com.gm2.core.element.Crumb;
 import br.com.gm2.core.io.GMPack;
 import br.com.gm2.core.io.GMUnpack;
 import br.com.gm2.core.strategy.AbstractStrategy;
-import br.com.gm2.core.strategy.impl.QuickSearchStrategy;
+import br.com.gm2.core.strategy.impl.SimviStrategy;
 
 /**
  * Main Application. Defines the user options and triggers the classes.
@@ -48,7 +48,7 @@ public class Main {
 		// ThreadPoolExecutor executor = new ThreadPoolExecutor(4, 4, 0,
 		// TimeUnit.SECONDS,
 		// new SynchronousQueue<Runnable>());
-		boolean assertTrue = processFiles(new QuickSearchStrategy(), srcFile, packedFile, false);
+		boolean assertTrue = processFiles(new SimviStrategy(), srcFile, packedFile, false);
 		// executor.shutdownNow();
 		System.out.println(assertTrue);
 	}

@@ -29,6 +29,7 @@ public class BruteForceStrategy extends AbstractStrategy {
 
 	private int m, h, k, n;
 	private boolean isLastElement;
+	private Crumb crumb;
 
 	public BruteForceStrategy(int[] subset, int m, int h) {
 		this.subset = subset;
@@ -43,6 +44,7 @@ public class BruteForceStrategy extends AbstractStrategy {
 	public void init(Crumb crumb) {
 		this.n = crumb.n;
 		this.k = crumb.k;
+		this.crumb = crumb;
 		this.isLastElement = false;
 		this.subset = new int[k];
 		this.identity = new int[k];
@@ -55,7 +57,7 @@ public class BruteForceStrategy extends AbstractStrategy {
 	}
 
 	@Override
-	public byte[] algorithm(Crumb crumb) {
+	public byte[] algorithm() {
 		int dc = crumb.dc(subset, identity);
 		byte[] result = null;
 		if (dc == crumb.d) {

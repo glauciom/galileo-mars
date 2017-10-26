@@ -34,7 +34,7 @@ import br.com.gm2.core.element.GMFileFormat;
 import br.com.gm2.core.io.GMPack;
 import br.com.gm2.core.io.GMUnpack;
 import br.com.gm2.core.strategy.AbstractStrategy;
-import br.com.gm2.core.strategy.impl.QuickSearchStrategy;
+import br.com.gm2.core.strategy.impl.SimviStrategy;
 import br.com.gm2.core.strategy.impl.reference.CBinaryRecursiveSearchStrategy;
 import br.com.gm2.core.strategy.impl.reference.HashParallelSearchStrategy;
 import br.com.gm2.core.strategy.impl.reference.HashSearchStrategy;
@@ -143,7 +143,7 @@ public class MainTest {
 		boolean assertTrue = processFiles(new HashSearchStrategy(), srcFile, packedFile, false);
 		Assert.assertTrue(assertTrue);
 		System.out.println("OptimizedHashSearchStrategy");
-		boolean aTrue = processFiles(new QuickSearchStrategy(), srcFile, packedFile, false);
+		boolean aTrue = processFiles(new SimviStrategy(), srcFile, packedFile, false);
 		Assert.assertTrue(aTrue);
 	}
 	
@@ -155,7 +155,7 @@ public class MainTest {
 		boolean assertTrue = processFiles(new OptimizedHashSearchStrategy(), srcFile, packedFile, false);
 		Assert.assertTrue(assertTrue);
 		System.out.println("OptimizedHashSearchStrategy");
-		boolean aTrue = processFiles(new QuickSearchStrategy(), srcFile, packedFile, false);
+		boolean aTrue = processFiles(new SimviStrategy(), srcFile, packedFile, false);
 		Assert.assertTrue(aTrue);
 	}
 	

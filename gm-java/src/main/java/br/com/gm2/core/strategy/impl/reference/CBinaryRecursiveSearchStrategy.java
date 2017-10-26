@@ -30,6 +30,7 @@ import br.com.gm2.core.strategy.AbstractStrategy;
 public class CBinaryRecursiveSearchStrategy extends AbstractStrategy {
 
 	private int k, n;
+	private Crumb crumb;
 
 	public CBinaryRecursiveSearchStrategy(int[] subset) {
 		this.subset = subset;
@@ -40,6 +41,7 @@ public class CBinaryRecursiveSearchStrategy extends AbstractStrategy {
 
 	@Override
 	public void init(Crumb crumb) {
+	    this.crumb = crumb;
 		this.n = crumb.n;
 		this.k = crumb.k;
 		this.subset = new int[k];
@@ -51,7 +53,7 @@ public class CBinaryRecursiveSearchStrategy extends AbstractStrategy {
 	}
 
 	@Override
-	public byte[] algorithm(Crumb crumb) {
+	public byte[] algorithm() {
 		return binarySearch(subset, 0, n - k + 1, crumb);
 	}
 

@@ -61,11 +61,10 @@ public class HashParallelSearchStrategy extends AbstractStrategy {
 	}
 
 	@Override
-	public byte[] algorithm(Crumb crumb) {
+	public byte[] algorithm() {
 		try {
 			return hashSearch(subset, 0, n - k + 1, d, 0);
 		} catch (InterruptedException | ExecutionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -92,7 +91,7 @@ public class HashParallelSearchStrategy extends AbstractStrategy {
 		byte[] result = null;
 		for (int j = h; j < limit; j++) {
 			subset = slide(subset, j, i);
-			int dc = crumb.dc(subset, identity, i, dpa);
+			int dc = crumb.measure(subset, identity, i, dpa);
 			if (dc == d) {
 				result = crumb.processSubset(subset, identity);
 				if (result != null) {
