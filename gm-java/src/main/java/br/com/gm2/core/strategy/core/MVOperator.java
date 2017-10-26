@@ -71,4 +71,12 @@ public final class MVOperator {
         }
         return result;
     }
+    
+    public static String print(int[] subset, int d) {
+        String result = "";
+        for (int i = 0; i < subset.length; i++) {
+            result += subset[i] + " ";
+        }
+        return result + " " + d;
+    }
 }

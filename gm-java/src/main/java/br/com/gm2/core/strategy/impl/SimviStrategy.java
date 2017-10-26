@@ -21,8 +21,8 @@ import br.com.gm2.core.strategy.AbstractStrategy;
 import br.com.gm2.core.strategy.core.MVOperator;
 
 /**
- * Implementation of Quick Search Strategy. Sequential Approach.
- * Search / Inspect / Measure / Verify / Infiltrate
+ * Implementation of Quick Search Strategy. Sequential Approach. Search /
+ * Inspect / Measure / Verify / Infiltrate
  * 
  * @author glauciom
  *
