@@ -1,2 +1,2 @@
 # galileo-mars
-Galileo Mars is an experimental project which is focused on lossless compression techniques.
+Galileo Mars is an experimental project focused on packing techniques and combinatorial search.
