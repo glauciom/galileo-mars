@@ -32,31 +32,36 @@ import org.apfloat.ApfloatMath;
  */
 public class BigOperator {
 
-	private static int precision(String number) {
-		return number.length() + (int) Math.ceil(Math.log(number.length()));
+
+	private static final int DEFAULT_PRECISION = 8;
+	public static int precision(String number) {
+		int res = (int) Math.floor(Math.log(number.length())) + DEFAULT_PRECISION;
+		return res;
 	}
 
-	public static String log(String number) {
-		return ApcomplexMath.log(new Apcomplex(new Apfloat(number, precision(number)))).toString(true);
+	public static String log(String number, Integer precision) {
+		return ApcomplexMath.log(new Apcomplex(new Apfloat(number, precision))).toString(true);
 	}
-
-	public static String exp(String number) {
+	
+	public static String exp(String number, Integer precision) {
 		BigDecimal big = new BigDecimal(
-				ApcomplexMath.exp(new Apcomplex(new Apfloat(number, precision(number)))).toString(true));
-		BigDecimal two = new BigDecimal(big.toBigInteger()).subtract(big);
-		if (two.equals(BigDecimal.ZERO)) {
-			return big.toString();
-		} else if (two.compareTo(BigDecimal.ZERO) < 0) {
-			return big.add(BigDecimal.ONE).toBigInteger().toString();
-		}
-		return big.toBigInteger().toString();
+				ApcomplexMath.exp(new Apcomplex(new Apfloat(number, precision))).toString(true));
+		return big.toString();
 
 	}
 
 	public static String error(String first, String second) {
 		return new Apcomplex(first).subtract(new Apcomplex(second)).toString();
 	}
-
+	
+	public static BigInteger ceil(BigDecimal d) {
+		return d.setScale(0, RoundingMode.CEILING).toBigInteger();
+	}
+	
+	public static BigInteger floor(BigDecimal d) {
+		return d.setScale(0, RoundingMode.FLOOR).toBigInteger();
+	}
+	
 	public static BigInteger getBinomialElements(int r, int s) {
 		if ((r - s) < s) {
 			return new BigInteger(factorial(r, s)).divide(new BigInteger(factorial(r - s, 1)));
@@ -88,9 +93,9 @@ public class BigOperator {
 		long time = System.currentTimeMillis();
 		String k = "" + getBinomialElements(64, 32);
 		System.out.println("length = " + k.length());
-		String s = BigOperator.log(k);
+		String s = BigOperator.log(k, precision(k));
 		System.out.println("log = " + s.length());
-		String s1 = BigOperator.exp(s);
+		String s1 = BigOperator.exp(s, precision(s));
 		String err = BigOperator.error(k, s1);
 		Apfloat ff = ApfloatMath.round(new Apfloat(s), 14, RoundingMode.FLOOR);
 		Double f = Double.valueOf(ff.toString());
@@ -100,7 +105,7 @@ public class BigOperator {
 		System.out.println("second = " + s1);
 		System.out.println("error = " + err);
 
-		s1 = BigOperator.exp(f.toString());
+		s1 = BigOperator.exp(f.toString(), precision(s1));
 		err = BigOperator.error(k, s1);
 
 		System.out.println("Compare\n");
